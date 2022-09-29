@@ -13,6 +13,6 @@ public class testScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(transform.position.x + 0.1f * Time.deltaTime, 0, transform.position.z);
+        transform.position = new Vector3(transform.position.x + 10.0f * Time.deltaTime, 0, transform.position.z);
     }
 }
