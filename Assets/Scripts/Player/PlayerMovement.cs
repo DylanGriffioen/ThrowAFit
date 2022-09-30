@@ -11,8 +11,9 @@ public class PlayerMovement : MonoBehaviour
      */
 
     /** TODO
+     * Crouch
      * Need to play with float values to find best for our game
-     *  Something is wrong with jumping. Doesn't always regonize boolean grounderPlayer or doesn't take input. 
+     * Something is wrong with jumping. Doesn't always regonize boolean grounderPlayer. Temporary fix is to always have small gravityFroce, even if player is grounded.
      */
 
     [SerializeField] bool canMove = true;
@@ -41,7 +42,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (groundedPlayer && playerVelocity.y < 0)
         {
-            playerVelocity.y = 0f;
+            //playerVelocity.y = 0f;
+            playerVelocity.y = gravityForce * 0.1f;
         }
 
         if (canMove)
