@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /**
+ *  Not in use since 06.10.2022
  *  Adapted from the version (DD/MM/YY - 29.09.2022)  https://docs.unity3d.com/ScriptReference/CharacterController.Move.html 
  *  @Janek Tuisk
  */
