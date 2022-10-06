@@ -34,3 +34,5 @@
 * Pause Object (in progress)
 	* Esc [Keyboard]
 	* Options [PS controller]
+	
+* Drop (in progress)
