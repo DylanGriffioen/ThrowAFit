@@ -13,10 +13,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] bool canMove = true;
     [SerializeField] private float movementX;
     [SerializeField] private float movementZ;
     [SerializeField] float movementSpeed = 5.0f;
-    [SerializeField] bool canMove = true;
     [SerializeField] float jumpHeight = 2.0f;
     [SerializeField] float gravityForce = -9.81f;
 
