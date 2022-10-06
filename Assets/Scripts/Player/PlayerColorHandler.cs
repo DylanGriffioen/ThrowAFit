@@ -25,10 +25,11 @@ public class PlayerColorHandler : MonoBehaviour
 
     private void ApplyRandomColorMaterialToPlayer()
     {
-        if(useRandomColor)
-            color = Random.ColorHSV();
+        if (useRandomColor)
+            color = new Color(Random.Range(0, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f);
+            //color = new ColorSHV();
 
-        if(material == null)
+        if (material == null)
             material = new Material(Shader.Find("Standard"));
 
         material.SetColor("_Color", color);
