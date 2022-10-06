@@ -2,19 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+ *  Adapted from the version (DD/MM/YY - 29.09.2022)  https://docs.unity3d.com/ScriptReference/CharacterController.Move.html 
+ *  @Janek Tuisk
+ */
+
+/** TODO
+ * Crouch
+ * Need to play with float values to find best for our game
+ * Something is wrong with jumping. Doesn't always regonize boolean grounderPlayer. Temporary fix is to always have small gravityFroce, even if player is grounded.
+ */
+
 public class PlayerMovement : MonoBehaviour
 {
 
-    /**
-     *  Adapted from the version (DD/MM/YY - 29.09.2022)  https://docs.unity3d.com/ScriptReference/CharacterController.Move.html 
-     *  @Janek Tuisk
-     */
-
-    /** TODO
-     * Crouch
-     * Need to play with float values to find best for our game
-     * Something is wrong with jumping. Doesn't always regonize boolean grounderPlayer. Temporary fix is to always have small gravityFroce, even if player is grounded.
-     */
 
     [SerializeField] bool canMove = true;
     [SerializeField] float movementSpeed = 5.0f;
