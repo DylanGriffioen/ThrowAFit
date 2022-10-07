@@ -10,30 +10,29 @@ using UnityEngine.InputSystem;
  */
 
 /** TODO
- * Need to recalculate raycast position ( height )
- * Make pickedup object "follow" player
- * Throw object math
- * Get values from throwable object
+ * Need to recalculate raycast position for pickin item up( height )
+ * Stealing object from another player?
  */
 
 public class PlayerInteractionHandler : MonoBehaviour
 {
 
-    [SerializeField] private LayerMask pickableLayer;
-    [SerializeField] private float pickupRange = 2f;
-    [SerializeField] private float throwForce = 500f;
-    [SerializeField] private float throwUpwardForce = 300f;
-    private PlayerControls playerControls;
-
-    private RaycastHit hit;
-
     [SerializeField] private GameObject currentObject;
     [SerializeField] private GameObject objectParent; // Pickable object parent
+    [SerializeField] private LayerMask pickableLayer;
+    [SerializeField] private float pickupRange = 2f;
+    private PlayerControls playerControls;
+    private RaycastHit hit;
+
 
     // Start is called before the first frame update
     void Awake()
     {
         playerControls = new PlayerControls();
+        /*
+         * create objectParent if null..
+         */
+
     }
 
     private void OnPickupDrop(InputValue movementValue)
@@ -59,9 +58,10 @@ public class PlayerInteractionHandler : MonoBehaviour
         if (currentObject == null)
             return;
 
-        Vector3 force = transform.forward * throwForce + transform.up * throwUpwardForce;
-        currentObject.GetComponent<Rigidbody>().AddForce(force);
-        DropObject();
+        if (currentObject.GetComponent<ThrowableObject>().Throw(transform))
+        {
+            Debug.Log("pewpew!");
+        }
     }
 
     private void OnPause(InputValue value)
@@ -85,21 +85,26 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     private void PickupObject(GameObject go)
     {
-        if (objectParent == null)
+        if (objectParent == null) //If player doesn't have slot for object.
+            return;
+
+        if (go.transform.parent != null) //If somebody is holding item already.
             return;
 
         currentObject = go;
-        currentObject.transform.position = Vector3.zero;
-        currentObject.transform.rotation = Quaternion.identity; // do we need this?
-        currentObject.transform.SetParent(objectParent.transform, false);
+        if (currentObject.GetComponent<ThrowableObject>().Pickup(objectParent))
+            Debug.Log("Object pickedup!");
+
     }
 
     private void DropObject()
     {
         if (objectParent == null)
             return;
-
-        currentObject.transform.parent = null;
-        currentObject = null;
+        
+        if (currentObject.GetComponent<ThrowableObject>().Drop())
+        {
+            currentObject = null;
+        }
     }
 }
