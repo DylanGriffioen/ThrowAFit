@@ -23,11 +23,11 @@
 	* C [Keyboard]
 	* Square [PS controller]
 	
-* Pickup Object (in progress) (probably will be one button for pickup and throw object action)
+* Pickup/Drop Object (in progress) 
 	* E [Keyboard]
 	* R2 [PS controller]
 	
-* Throw Object (in progress) (probably will be one button for pickup and throw object action)
+* Throw Object (in progress)
 	* F [Keyboard]
 	* R1 [PS controller]
 	
@@ -35,4 +35,3 @@
 	* Esc [Keyboard]
 	* Options [PS controller]
 	
-* Drop (in progress)

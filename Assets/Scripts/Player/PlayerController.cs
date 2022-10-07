@@ -2,7 +2,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /**
- *  (DD/MM/YY - 06.10.2022) 
+ *  Created (DD/MM/YY - 06.10.2022) 
+ *  Edited (DD/MM/YY - 07.10.2022)
  *  @Janek Tuisk
  */
 
@@ -35,8 +36,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Vector3 movement = new Vector3(movementX, 0f, movementZ);
-        characterController.Move(movement * movementSpeed * Time.deltaTime);
+        Vector3 move = new Vector3(movementX, 0, movementZ);
+        characterController.Move(move * movementSpeed * Time.deltaTime);
 
         playerVelocity.y += gravityForce * Time.deltaTime;
         characterController.Move(playerVelocity * Time.deltaTime);
@@ -52,17 +53,22 @@ public class PlayerController : MonoBehaviour
             //playerVelocity.y = 0f;
             playerVelocity.y = gravityForce * 0.1f;
         }
-
         if (canMove)
         {
             Vector3 movementVector = movementValue.Get<Vector2>();
-
             movementX = movementVector.x;
             movementZ = movementVector.y;
+
+            Vector3 move = new Vector3(movementX, 0, movementZ);
+
+            if (move != Vector3.zero)
+            {
+                gameObject.transform.forward = move;
+            }
         }
     }
 
-    private void OnJump(InputValue movementValue)
+    private void OnJump(InputValue value)
     {
         groundedPlayer = characterController.isGrounded;
 
@@ -70,6 +76,11 @@ public class PlayerController : MonoBehaviour
         {
             playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityForce);
         }
+    }
+
+    private void OnCrouch(InputValue value)
+    {
+        Debug.Log("Crouch");
     }
 
     /** (https://learn.unity.com/tutorial/taking-advantage-of-the-input-system-scripting-api?uv=2020.1&projectId=5fc93d81edbc2a137af402b7#5fcad3efedbc2a0020f781e1)
