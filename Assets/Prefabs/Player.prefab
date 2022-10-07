@@ -306,4 +306,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   pickupRange: 2
+  throwForce: 500
+  throwUpwardForce: 300
   currentObject: {fileID: 0}
+  objectParent: {fileID: 5218358108150702235}
