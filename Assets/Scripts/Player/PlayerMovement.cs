@@ -1,71 +1,85 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-/**
- *  Not in use since 06.10.2022
- *  Adapted from the version (DD/MM/YY - 29.09.2022)  https://docs.unity3d.com/ScriptReference/CharacterController.Move.html 
- *  @Janek Tuisk
- */
-
-/** TODO
- * Crouch
- * Need to play with float values to find best for our game
- * Something is wrong with jumping. Doesn't always regonize boolean grounderPlayer. Temporary fix is to always have small gravityFroce, even if player is grounded.
- */
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
 
-
-    [SerializeField] bool canMove = true;
-    [SerializeField] float movementSpeed = 5.0f;
-    [SerializeField] float jumpHeight = 2.0f;
-    [SerializeField] float gravityForce = -9.81f;
-
     private CharacterController characterController;
+    private InputActions _input;
     private Vector3 playerVelocity;
     private bool groundedPlayer;
 
-    private void Start()
+    [Header("Movement")]
+    [SerializeField] bool canMove = true;
+    [SerializeField] float _movementMultiplier = 5.0f;
+    [SerializeField] float _jumpForce = 2.0f;
+    private float _movementX;
+    private float _movementZ;
+
+    [Header("Gravity")]
+    [SerializeField] float _gravity = -9.81f;
+
+    void Awake()
     {
         characterController = gameObject.AddComponent<CharacterController>();
+        _input = new InputActions();
     }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        MovePlayer();
+        Vector3 move = new Vector3(_movementX, 0, _movementZ);
+        characterController.Move(move * _movementMultiplier * Time.deltaTime);
+
+        playerVelocity.y += _gravity * Time.deltaTime;
+        characterController.Move(playerVelocity * Time.deltaTime);
     }
 
-    private void MovePlayer()
+    private void OnMove(InputValue movementValue)
     {
         groundedPlayer = characterController.isGrounded;
 
         if (groundedPlayer && playerVelocity.y < 0)
         {
             //playerVelocity.y = 0f;
-            playerVelocity.y = gravityForce * 0.1f;
+            playerVelocity.y = _gravity * 0.1f;
         }
-
         if (canMove)
         {
-            Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-            characterController.Move(move * Time.deltaTime * movementSpeed);
+            Vector3 movementVector = movementValue.Get<Vector2>();
+            _movementX = movementVector.x;
+            _movementZ = movementVector.y;
 
+            Vector3 move = new Vector3(_movementX, 0, _movementZ);
 
-            if(move != Vector3.zero)
+            if (move != Vector3.zero)
             {
                 gameObject.transform.forward = move;
             }
-
-            if (Input.GetButtonDown("Jump") && groundedPlayer)
-            {
-                playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityForce);
-            }
-
-            playerVelocity.y += gravityForce * Time.deltaTime;
-            characterController.Move(playerVelocity * Time.deltaTime);
         }
+    }
+
+    private void OnJump(InputValue value)
+    {
+        groundedPlayer = characterController.isGrounded;
+
+        if (groundedPlayer)
+        {
+            playerVelocity.y += Mathf.Sqrt(_jumpForce * -3.0f * _gravity);
+        }
+    }
+
+    private void OnCrouch(InputValue value)
+    {
+        Debug.Log("Crouch");
+    }
+
+
+    private void OnEnable()
+    {
+        _input.Ingame.Enable();
+    }
+    private void OnDisable()
+    {
+        _input.Ingame.Disable();
     }
 }

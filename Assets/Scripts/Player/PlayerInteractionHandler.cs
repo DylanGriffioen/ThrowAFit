@@ -1,110 +1,126 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-/**
- *  Created (DD/MM/YY - 06.10.2022) 
- *  Edited (DD/MM/YY - 07.10.2022)
- *  @Janek Tuisk
- */
-
-/** TODO
- * Need to recalculate raycast position for pickin item up( height )
- * Stealing object from another player?
- */
-
 public class PlayerInteractionHandler : MonoBehaviour
 {
+    [SerializeField] Vector3 size = Vector3.one;
 
-    [SerializeField] private GameObject currentObject;
-    [SerializeField] private GameObject objectParent; // Pickable object parent
-    [SerializeField] private LayerMask pickableLayer;
-    [SerializeField] private float pickupRange = 2f;
-    private PlayerControls playerControls;
-    private RaycastHit hit;
+    private InputActions _input;
 
+    [Header("Item slot")]
+    [SerializeField] Transform _itemSlot;
 
-    // Start is called before the first frame update
+    [Header("Pickup")]
+    [SerializeField] bool _canPickup = true;
+    [SerializeField] float _maxPickupRange = 1.0f;
+    [SerializeField] LayerMask throwableItemMask;
+
+    [Header("Drop")]
+    [SerializeField] bool _canDrop = true;
+    [SerializeField] Vector3 _dropLocation;
+
+    [Header("Throw")]
+    [SerializeField] bool _canThrow = true;
+
+    [Header("Pause")]
+    [SerializeField] bool _canPause = true;
+
     void Awake()
     {
-        playerControls = new PlayerControls();
-        /*
-         * create objectParent if null..
-         */
+        _input = new InputActions();
 
+    }
+    private void Update()
+    {
+        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 2.0f, Color.red);
     }
 
     private void OnPickupDrop(InputValue movementValue)
     {
-        if (currentObject != null)
+        Debug.Log("pickup/drop");
+        if (!PlayerHasItem())
         {
-            Debug.Log("Drop");
-            DropObject();
-        }
-        else
-        {
-            Debug.Log("Pickup");
-            if (Physics.Raycast(transform.position, transform.forward, out hit, pickupRange, pickableLayer))
+            //Pickup
+            if (_canPickup)
             {
-                PickupObject(hit.collider.gameObject);
+                
+                RaycastHit pickupRay;
+                float rayCalculatedHeight = 1f;
+                Vector3 boxSize = new Vector3(2.0f, 2.0f, 2.0f);
+                //need to get new values for this, as doesn't regonise every item.
+                if(Physics.BoxCast(transform.position, transform.localScale, transform.forward, out pickupRay, transform.rotation, _maxPickupRange, throwableItemMask))
+                {
+                    Debug.Log($"distance: {pickupRay.distance}");
+                    if (pickupRay.collider.attachedRigidbody)
+                    {
+                        GameObject item = pickupRay.collider.gameObject;
+
+                        if (item.transform.parent != null) //Item is picked up already
+                            return;
+
+                        item.transform.parent = _itemSlot;
+                        item.GetComponent<Collider>().enabled = false;
+                        item.GetComponent<Rigidbody>().useGravity = false;
+                        item.transform.localPosition = Vector3.zero;
+                        item.transform.rotation = transform.rotation;
+                    }
+                }
             }
         }
+        else
+        {            if (_canDrop)
+            {
+                //Drop
+                GameObject item = _itemSlot.GetChild(0).gameObject;
+
+                if (item != null)
+                {
+                    item.transform.parent = null;
+                    item.GetComponent<Collider>().enabled = true;
+                    item.GetComponent<Rigidbody>().useGravity = true;
+                }
+            }
+        }
+    }
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+            //Draw a Ray forward from GameObject toward the maximum distance
+            Gizmos.DrawRay(transform.position, transform.forward * _maxPickupRange);
+        //Draw a cube at the maximum distance
+            Gizmos.DrawWireCube(transform.position + transform.forward * _maxPickupRange, size);
+    }
+    private bool PlayerHasItem()
+    {
+        return (_itemSlot.transform.childCount != 0);
     }
 
     private void OnThrow(InputValue value)
     {
-        Debug.Log("Throw");
-        if (currentObject == null)
-            return;
-
-        if (currentObject.GetComponent<ThrowableObject>().Throw(transform))
+        //Throw
+        if (_canThrow)
         {
-            Debug.Log("pewpew!");
+
         }
     }
 
     private void OnPause(InputValue value)
     {
-        Debug.Log("Pause");
+        //Pause
+        if (_canPause)
+        {
+
+        }
     }
 
-    /** (https://learn.unity.com/tutorial/taking-advantage-of-the-input-system-scripting-api?uv=2020.1&projectId=5fc93d81edbc2a137af402b7#5fcad3efedbc2a0020f781e1)
-     * For the Input System commands to work, you will need to add both the OnEnable() and OnDisable() methods next.
-     * Because the Input System is modular, you will be able to swap between different input assets or Control Schemes in the future.
-     * */
+
     private void OnEnable()
     {
-        playerControls.Player.Enable();
+        _input.Ingame.Enable();
     }
     private void OnDisable()
     {
-        playerControls.Player.Disable();
-    }
-
-
-    private void PickupObject(GameObject go)
-    {
-        if (objectParent == null) //If player doesn't have slot for object.
-            return;
-
-        if (go.transform.parent != null) //If somebody is holding item already.
-            return;
-
-        currentObject = go;
-        if (currentObject.GetComponent<ThrowableObject>().Pickup(objectParent))
-            Debug.Log("Object pickedup!");
-
-    }
-
-    private void DropObject()
-    {
-        if (objectParent == null)
-            return;
-        
-        if (currentObject.GetComponent<ThrowableObject>().Drop())
-        {
-            currentObject = null;
-        }
+        _input.Ingame.Disable();
     }
 }
