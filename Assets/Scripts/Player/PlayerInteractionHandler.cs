@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerInteractionHandler : MonoBehaviour
 {
-    [SerializeField] Vector3 size = Vector3.one;
+    [SerializeField] Vector3 size;
 
     private InputActions _input;
 
@@ -14,7 +14,8 @@ public class PlayerInteractionHandler : MonoBehaviour
     [Header("Pickup")]
     [SerializeField] bool _canPickup = true;
     [SerializeField] float _maxPickupRange = 1.0f;
-    [SerializeField] LayerMask throwableItemMask;
+    [SerializeField] LayerMask _throwableItemMask;
+    [SerializeField] Transform _lootArea;
 
     [Header("Drop")]
     [SerializeField] bool _canDrop = true;
@@ -44,12 +45,11 @@ public class PlayerInteractionHandler : MonoBehaviour
             //Pickup
             if (_canPickup)
             {
-                
                 RaycastHit pickupRay;
-                float rayCalculatedHeight = 1f;
-                Vector3 boxSize = new Vector3(2.0f, 2.0f, 2.0f);
+                
                 //need to get new values for this, as doesn't regonise every item.
-                if(Physics.BoxCast(transform.position, transform.localScale, transform.forward, out pickupRay, transform.rotation, _maxPickupRange, throwableItemMask))
+
+                if (Physics.BoxCast(_lootArea.position, _lootArea.localScale, transform.forward, out pickupRay, transform.rotation, _maxPickupRange, _throwableItemMask))
                 {
                     Debug.Log($"distance: {pickupRay.distance}");
                     if (pickupRay.collider.attachedRigidbody)
@@ -69,7 +69,8 @@ public class PlayerInteractionHandler : MonoBehaviour
             }
         }
         else
-        {            if (_canDrop)
+        {
+            if (_canDrop)
             {
                 //Drop
                 GameObject item = _itemSlot.GetChild(0).gameObject;
@@ -86,10 +87,9 @@ public class PlayerInteractionHandler : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-            //Draw a Ray forward from GameObject toward the maximum distance
-            Gizmos.DrawRay(transform.position, transform.forward * _maxPickupRange);
         //Draw a cube at the maximum distance
-            Gizmos.DrawWireCube(transform.position + transform.forward * _maxPickupRange, size);
+        Gizmos.DrawWireCube(_lootArea.position, _lootArea.localScale);
+        //Physics.BoxCast(transform.position, transform.localScale, transform.forward, out pickupRay, transform.rotation, _maxPickupRange, throwableItemMask)
     }
     private bool PlayerHasItem()
     {

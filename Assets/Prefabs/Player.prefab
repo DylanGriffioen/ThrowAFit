@@ -252,6 +252,36 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &8524060900230677741
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4036501279505074459}
+  m_Layer: 0
+  m_Name: LootArea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4036501279505074459
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8524060900230677741}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.15, z: 0.83}
+  m_LocalScale: {x: 2, y: 2.5, z: 2}
+  m_Children: []
+  m_Father: {fileID: 9012310602268196096}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9012310602268196108
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,6 +318,7 @@ Transform:
   m_Children:
   - {fileID: 3913975781568134117}
   - {fileID: 1973915454256228843}
+  - {fileID: 4036501279505074459}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -412,12 +443,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0219add2ae16b344b639dcd422503d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  size: {x: 0, y: 0, z: 0}
   _itemSlot: {fileID: 3913975781568134117}
   _canPickup: 1
-  _pickupRayRange: 2
-  throwableItemMask:
+  _maxPickupRange: 1
+  _throwableItemMask:
     serializedVersion: 2
     m_Bits: 64
+  _lootArea: {fileID: 4036501279505074459}
   _canDrop: 1
   _dropLocation: {x: 0, y: 0, z: 0}
   _canThrow: 1
