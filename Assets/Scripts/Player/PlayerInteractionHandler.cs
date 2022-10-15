@@ -13,9 +13,10 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     [Header("Pickup")]
     [SerializeField] bool _canPickup = true;
-    [SerializeField] float _maxPickupRange = 1.0f;
     [SerializeField] LayerMask _throwableItemMask;
     [SerializeField] Transform _lootArea;
+    [SerializeField] BoxCollider _lootAreaCollider;
+    [SerializeField] float _maxPickupDistance = 1.0f;
 
     [Header("Drop")]
     [SerializeField] bool _canDrop = true;
@@ -34,7 +35,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     }
     private void Update()
     {
-        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 2.0f, Color.red);
+        //ExtDebug.DrawBox(_lootArea.position, _lootArea.localScale, transform.rotation, Color.red);
     }
 
     private void OnPickupDrop(InputValue movementValue)
@@ -46,14 +47,19 @@ public class PlayerInteractionHandler : MonoBehaviour
             if (_canPickup)
             {
                 RaycastHit pickupRay;
-                
-                //need to get new values for this, as doesn't regonise every item.
 
-                if (Physics.BoxCast(_lootArea.position, _lootArea.localScale, transform.forward, out pickupRay, transform.rotation, _maxPickupRange, _throwableItemMask))
+
+                // QueryTriggerInteraction.Collide is useful for smaller objects that doesn't block player movement like a knife.
+                // Every item Trigger = true?
+                // TODO: FIX THIS
+
+                //if (Physics.BoxCast(_lootArea.position, _lootArea.localScale, transform.forward, out pickupRay, transform.rotation, _maxPickupDistance, _throwableItemMask, QueryTriggerInteraction.Collide))
+                if (Physics.BoxCast(_lootAreaCollider.bounds.center, _lootArea.localScale, transform.forward, out pickupRay, transform.rotation, _throwableItemMask))
                 {
-                    Debug.Log($"distance: {pickupRay.distance}");
+                    Debug.Log("2 - Throwable item found, name: " + pickupRay.collider.name);
                     if (pickupRay.collider.attachedRigidbody)
                     {
+                        Debug.Log("2 - Throwable item found, name: " + pickupRay.collider.name);
                         GameObject item = pickupRay.collider.gameObject;
 
                         if (item.transform.parent != null) //Item is picked up already
@@ -66,6 +72,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                         item.transform.rotation = transform.rotation;
                     }
                 }
+                Debug.Log(pickupRay);
             }
         }
         else
@@ -73,24 +80,23 @@ public class PlayerInteractionHandler : MonoBehaviour
             if (_canDrop)
             {
                 //Drop
-                GameObject item = _itemSlot.GetChild(0).gameObject;
 
-                if (item != null)
+                if (_itemSlot.childCount == 1)
                 {
-                    item.transform.parent = null;
-                    item.GetComponent<Collider>().enabled = true;
-                    item.GetComponent<Rigidbody>().useGravity = true;
+                    GameObject item = _itemSlot.GetChild(0).gameObject;
+
+                    if (item != null)
+                    {
+                        item.transform.parent = null;
+                        item.GetComponent<Collider>().enabled = true;
+                        item.GetComponent<Rigidbody>().useGravity = true;
+                    }
                 }
             }
         }
     }
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        //Draw a cube at the maximum distance
-        Gizmos.DrawWireCube(_lootArea.position, _lootArea.localScale);
-        //Physics.BoxCast(transform.position, transform.localScale, transform.forward, out pickupRay, transform.rotation, _maxPickupRange, throwableItemMask)
-    }
+
+
     private bool PlayerHasItem()
     {
         return (_itemSlot.transform.childCount != 0);
@@ -101,8 +107,28 @@ public class PlayerInteractionHandler : MonoBehaviour
         //Throw
         if (_canThrow)
         {
+            if(_itemSlot.childCount == 1)
+            {
+                GameObject item = _itemSlot.GetChild(0).gameObject;
 
+                if (item != null)
+                {
+
+                    ThrowableItem throwableItem = item.GetComponent<ThrowableItem>();
+
+                    if(throwableItem != null)
+                    {
+                        throwableItem.ThrowItem();
+                    }
+                }
+            }
         }
+    }
+
+
+    public void ApplyMovementForce(Vector3 vec)
+    {
+        Debug.Log("Player got hit! force: " + vec);
     }
 
     private void OnPause(InputValue value)
