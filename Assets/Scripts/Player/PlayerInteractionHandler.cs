@@ -50,13 +50,11 @@ public class PlayerInteractionHandler : MonoBehaviour
 
 
                 // QueryTriggerInteraction.Collide is useful for smaller objects that doesn't block player movement like a knife.
-                // Every item Trigger = true?
                 // TODO: FIX THIS
 
                 //if (Physics.BoxCast(_lootArea.position, _lootArea.localScale, transform.forward, out pickupRay, transform.rotation, _maxPickupDistance, _throwableItemMask, QueryTriggerInteraction.Collide))
                 if (Physics.BoxCast(_lootAreaCollider.bounds.center, _lootArea.localScale, transform.forward, out pickupRay, transform.rotation, _throwableItemMask))
                 {
-                    Debug.Log("2 - Throwable item found, name: " + pickupRay.collider.name);
                     if (pickupRay.collider.attachedRigidbody)
                     {
                         Debug.Log("2 - Throwable item found, name: " + pickupRay.collider.name);
@@ -69,6 +67,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                         item.GetComponent<Collider>().enabled = false;
                         item.GetComponent<Rigidbody>().useGravity = false;
                         item.transform.localPosition = Vector3.zero;
+                        item.transform.rotation = Quaternion.identity;
                         item.transform.rotation = transform.rotation;
                     }
                 }
@@ -80,7 +79,6 @@ public class PlayerInteractionHandler : MonoBehaviour
             if (_canDrop)
             {
                 //Drop
-
                 if (_itemSlot.childCount == 1)
                 {
                     GameObject item = _itemSlot.GetChild(0).gameObject;
@@ -113,7 +111,6 @@ public class PlayerInteractionHandler : MonoBehaviour
 
                 if (item != null)
                 {
-
                     ThrowableItem throwableItem = item.GetComponent<ThrowableItem>();
 
                     if(throwableItem != null)
@@ -123,12 +120,6 @@ public class PlayerInteractionHandler : MonoBehaviour
                 }
             }
         }
-    }
-
-
-    public void ApplyMovementForce(Vector3 vec)
-    {
-        Debug.Log("Player got hit! force: " + vec);
     }
 
     private void OnPause(InputValue value)

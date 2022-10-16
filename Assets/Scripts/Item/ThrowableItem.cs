@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ThrowableItem : MonoBehaviour
 {
-    
+
     [SerializeField] int _throwableItemLayerNumber;
 
 
@@ -13,11 +13,13 @@ public class ThrowableItem : MonoBehaviour
     [SerializeField] float _gravityForce = -9.81f;
 
     [Header("Throw")]
-    [SerializeField] float _throwHeightForce  = 1.0f;
+    [SerializeField] float _throwHeightForce = 1.0f;
     [SerializeField] float _throwHeightForceMultiplier = 1.0f;
     [SerializeField] float _throwForwardForce = 1.0f;
     [SerializeField] float _throwForwardForceMultiplier = 1.0f;
-    [SerializeField] bool _isThrown  = false;
+    [SerializeField] bool _isThrown = false;
+    [SerializeField] float _maxFlyingTime = 10.0f;
+    [SerializeField] float _currentFlyingTime = 0;
 
     [Header("Impact")]
     [SerializeField] float _playerImpactForce = 5.0f;
@@ -48,7 +50,14 @@ public class ThrowableItem : MonoBehaviour
     {
         if (_isThrown)
         {
-            
+            if(_currentFlyingTime > 0)
+            {
+                _currentFlyingTime -= Time.fixedDeltaTime;
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 
@@ -90,6 +99,7 @@ public class ThrowableItem : MonoBehaviour
             _col.isTrigger = true;
 
             _rb.AddForce(CalculateThrowForce(), ForceMode.Force);
+            _currentFlyingTime = _maxFlyingTime;
             _isThrown = true;
         }
     }
@@ -113,9 +123,9 @@ public class ThrowableItem : MonoBehaviour
             {
                 Debug.Log("Player hit! "+ other.name);
 
-                PlayerInteractionHandler PIH = other.GetComponent<PlayerInteractionHandler>();
+                PlayerMovement PM = other.GetComponent<PlayerMovement>();
 
-                PIH.ApplyMovementForce(ImpactForce());
+                PM.ApplyMovementForce(ImpactForceDirection(other.transform), ImpactForce());
                 OnHitDefault(_destroyOnPlayerHit);
 
             }
@@ -131,17 +141,28 @@ public class ThrowableItem : MonoBehaviour
         }
     }
 
-
-    private Vector3 ImpactForce()
+    private Vector3 ImpactForceDirection(Transform other)
     {
-        Vector3 calculatedForce;
+        Vector3 calculatedDirection;
 
         //TODO: Redo this.
-        calculatedForce = transform.forward * _throwForwardForce * _throwForwardForceMultiplier;
+        calculatedDirection = transform.forward * _playerImpactForce * _playerImpactForceMultiplier + Vector3.up * _playerImpactForce * _playerImpactForceMultiplier; // * _throwForwardForce * _throwForwardForceMultiplier
+        Debug.Log(calculatedDirection);
+
+        return calculatedDirection;
+    }
+
+    private float ImpactForce()
+    {
+        float calculatedForce;
+
+        Debug.Log($"{gameObject.name} - velocity: {_rb.velocity} magnitude: {transform.position.magnitude} mass: {_rb.mass}");
+
+        //TODO: Redo this.
+        calculatedForce = _playerImpactForce * _playerImpactForceMultiplier; //* mass, rb.speed? ect..
 
         return calculatedForce;
     }
-
     private void OnHitDefault(bool destroyObject)
     {
         //+ sound effect?

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028331, g: 0.2257133, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -256,10 +256,15 @@ MonoBehaviour:
   _throwHeightForce: 1
   _throwHeightForceMultiplier: 1
   _throwForwardForce: 1
-  _throwForwardForceMultiplier: 1
+  _throwForwardForceMultiplier: 1000
   _isThrown: 0
+  _maxFlyingTime: 10
+  _currentFlyingTime: 0
   _playerImpactForce: 5
   _playerImpactForceMultiplier: 1
+  _destroyOnHit: 0
+  _destroyOnPlayerHit: 0
+  _OnHitAudioClip: {fileID: 0}
   _itemMass: 1
   _itemDrag: 0
   _itemAngularDrag: 0
@@ -726,10 +731,15 @@ MonoBehaviour:
   _throwHeightForce: 1
   _throwHeightForceMultiplier: 1
   _throwForwardForce: 1
-  _throwForwardForceMultiplier: 1
+  _throwForwardForceMultiplier: 1000
   _isThrown: 0
+  _maxFlyingTime: 10
+  _currentFlyingTime: 0
   _playerImpactForce: 5
   _playerImpactForceMultiplier: 1
+  _destroyOnHit: 0
+  _destroyOnPlayerHit: 0
+  _OnHitAudioClip: {fileID: 0}
   _itemMass: 1
   _itemDrag: 0
   _itemAngularDrag: 0
@@ -1184,10 +1194,15 @@ MonoBehaviour:
   _throwHeightForce: 1
   _throwHeightForceMultiplier: 1
   _throwForwardForce: 1
-  _throwForwardForceMultiplier: 1
+  _throwForwardForceMultiplier: 1000
   _isThrown: 0
+  _maxFlyingTime: 10
+  _currentFlyingTime: 0
   _playerImpactForce: 5
   _playerImpactForceMultiplier: 1
+  _destroyOnHit: 0
+  _destroyOnPlayerHit: 0
+  _OnHitAudioClip: {fileID: 0}
   _itemMass: 1
   _itemDrag: 0
   _itemAngularDrag: 0
