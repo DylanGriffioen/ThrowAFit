@@ -91,6 +91,12 @@ public class ThrowableItem : MonoBehaviour
     {
         if (!_isThrown)
         {
+            /* TODO
+            * The parent's scale influences the children as well. When it is parented, divide the player's scale by the platform's scale.
+            * For example, if player is scaled (1,1,1) and the platform is (0.7, 0.2, 0.7) the player will need to be scaled to (1.4286, 5, 1.4286)
+            * to keep it's correct size when parented.
+            * Of course when it is unparented, revert the scale back.
+            */
             transform.parent = null;
             if (_useUnityGravitySystem)
                 _rb.useGravity = true;

@@ -35,7 +35,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     }
     private void Update()
     {
-        //ExtDebug.DrawBox(_lootArea.position, _lootArea.localScale, transform.rotation, Color.red);
+        ExtDebug.DrawBox(_lootArea.position, _lootArea.localScale, transform.rotation, Color.red);
     }
 
     private void OnPickupDrop(InputValue movementValue)
@@ -49,7 +49,6 @@ public class PlayerInteractionHandler : MonoBehaviour
                 RaycastHit pickupRay;
 
 
-                // QueryTriggerInteraction.Collide is useful for smaller objects that doesn't block player movement like a knife.
                 // TODO: FIX THIS
 
                 //if (Physics.BoxCast(_lootArea.position, _lootArea.localScale, transform.forward, out pickupRay, transform.rotation, _maxPickupDistance, _throwableItemMask, QueryTriggerInteraction.Collide))
@@ -62,6 +61,13 @@ public class PlayerInteractionHandler : MonoBehaviour
 
                         if (item.transform.parent != null) //Item is picked up already
                             return;
+
+                        /* TODO
+                         * The parent's scale influences the children as well. When it is parented, divide the player's scale by the platform's scale.
+                         * For example, if player is scaled (1,1,1) and the platform is (0.7, 0.2, 0.7) the player will need to be scaled to (1.4286, 5, 1.4286)
+                         * to keep it's correct size when parented.
+                         * Of course when it is unparented, revert the scale back.
+                         */
 
                         item.transform.parent = _itemSlot;
                         item.GetComponent<Collider>().enabled = false;

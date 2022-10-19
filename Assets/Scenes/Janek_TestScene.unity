@@ -261,7 +261,7 @@ MonoBehaviour:
   _maxFlyingTime: 10
   _currentFlyingTime: 0
   _playerImpactForce: 5
-  _playerImpactForceMultiplier: 1
+  _playerImpactForceMultiplier: 5
   _destroyOnHit: 0
   _destroyOnPlayerHit: 0
   _OnHitAudioClip: {fileID: 0}
