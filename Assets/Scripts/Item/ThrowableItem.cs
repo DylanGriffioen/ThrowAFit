@@ -129,7 +129,7 @@ public class ThrowableItem : MonoBehaviour
             {
                 Debug.Log("Player hit! "+ other.name);
 
-                PlayerMovement PM = other.GetComponent<PlayerMovement>();
+                OldPlayerMovement PM = other.GetComponent<OldPlayerMovement>();
 
                 PM.ApplyMovementForce(ImpactForceDirection(other.transform), ImpactForce());
                 OnHitDefault(_destroyOnPlayerHit);
