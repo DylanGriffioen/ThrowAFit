@@ -5,12 +5,15 @@ using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
+    public float moveSpeed, jumpForce, smoothTurnTime;
+    
+
     InputActions input;
     Rigidbody rb;
     GroundCheck groundCheck;
-    Vector2 moveDir;
+    Vector2 inputDir, moveDir;
     bool onGround = false;
-
+    float targetAngle, smoothAngle, smoothTurnVelocity;
     void Start()
     {
         input = new InputActions();
@@ -21,35 +24,50 @@ public class Movement : MonoBehaviour
     void Update()
     {
         onGround = groundCheck.onGround;
+        Directional();
     }
-    private void OnMove(InputValue movementValue)
+    void Directional()
     {
-        moveDir = movementValue.Get<Vector2>();
-        rb.AddForce(new Vector3(moveDir.x, 0, moveDir.y));
+        rb.velocity = new Vector3(moveDir.x, rb.velocity.y, moveDir.y);
+        if (inputDir.magnitude > 0.125f)
+        {
+            targetAngle = (Vector2.SignedAngle(inputDir, Vector2.up) + 360f) % 360f;
+            smoothAngle = Mathf.SmoothDampAngle(transform.rotation.eulerAngles.y, targetAngle, ref smoothTurnVelocity, smoothTurnTime);
+            transform.rotation = Quaternion.Euler(new Vector3(0, smoothAngle, 0));
+        }
+    }
+    void OnMove(InputValue movementValue)
+    {
+        inputDir = movementValue.Get<Vector2>();
+        moveDir = inputDir * moveSpeed;
     }
 
-    private void OnJump(InputValue value)
+    void OnJump(InputValue value)
     {
-        
+        if (!onGround)
+        {
+            return;
+        }
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
-    private void OnCrouch(InputValue value)
+    void OnCrouch(InputValue value)
     {
         Debug.Log("Crouch");
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
         
     }
 
 
-    private void OnEnable()
-    {
-        input.Ingame.Enable();
-    }
-    private void OnDisable()
-    {
-        input.Ingame.Disable();
-    }
+    //private void OnEnable()
+    //{
+    //    input.Ingame.Enable();
+    //}
+    //private void OnDisable()
+    //{
+    //    input.Ingame.Disable();
+    //}
 }
