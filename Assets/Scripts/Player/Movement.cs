@@ -6,29 +6,41 @@ using UnityEngine.InputSystem;
 public class Movement : MonoBehaviour
 {
     public float moveSpeed, jumpForce, smoothTurnTime;
+
+    Rigidbody rb;
+    Transform bean;
+    GroundCheck groundCheck;
+    CapsuleCollider beanCollider;
+
+    Vector3 origScale;
+    Vector2 inputDir, moveDir;
+    bool onGround, crouching = false;
+    float targetAngle, smoothAngle, smoothTurnVelocity, _moveSpeed;
     
 
-    InputActions input;
-    Rigidbody rb;
-    GroundCheck groundCheck;
-    Vector2 inputDir, moveDir;
-    bool onGround = false;
-    float targetAngle, smoothAngle, smoothTurnVelocity;
     void Start()
     {
-        input = new InputActions();
         rb = GetComponent<Rigidbody>();
-        groundCheck = transform.GetChild(4).GetComponent<GroundCheck>();
+        groundCheck = transform.GetChild(3).GetComponent<GroundCheck>();
+        bean = transform.GetChild(0);
+        origScale = bean.localScale;
+        _moveSpeed = moveSpeed;
+        beanCollider = GetComponent<CapsuleCollider>();
     }
 
     void Update()
     {
-        onGround = groundCheck.onGround;
+        onGround = groundCheck.onGround; //Update onGround from groundcheck object's collider
         Directional();
     }
     void Directional()
     {
-        rb.velocity = new Vector3(moveDir.x, rb.velocity.y, moveDir.y);
+        _moveSpeed = crouching ? moveSpeed / 2f : moveSpeed; //If crouching, halve moveSpeed.
+        //_moveSpeed is editable in code while being able to adjust default moveSpeed in editor.
+        moveDir = inputDir * _moveSpeed; //inputDir is the normalized direction, moveDir includes moveSpeed
+        rb.velocity = new Vector3(moveDir.x, rb.velocity.y, moveDir.y); //Assign velocity and keep current y-component of velocity
+
+        //Smooth rotation
         if (inputDir.magnitude > 0.125f)
         {
             targetAngle = (Vector2.SignedAngle(inputDir, Vector2.up) + 360f) % 360f;
@@ -39,7 +51,6 @@ public class Movement : MonoBehaviour
     void OnMove(InputValue movementValue)
     {
         inputDir = movementValue.Get<Vector2>();
-        moveDir = inputDir * moveSpeed;
     }
 
     void OnJump(InputValue value)
@@ -48,26 +59,30 @@ public class Movement : MonoBehaviour
         {
             return;
         }
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse); //Add upward impulse
     }
 
     void OnCrouch(InputValue value)
     {
-        Debug.Log("Crouch");
+        //OnCrouchDown
+        if (value.isPressed)
+        {
+            crouching = true;
+            bean.localScale = new Vector3(origScale.x * 1.3f, origScale.y * 0.5f, origScale.z * 1.3f);
+            bean.localPosition = new Vector3(0, -0.5f, 0);
+            beanCollider.height = 1f;
+            beanCollider.center = new Vector3(0, -0.5f, 0);
+            beanCollider.radius = 0.65f;
+        }
+        //OnCrouchUp
+        else
+        {
+            crouching = false;
+            bean.localScale = origScale;
+            bean.localPosition = Vector3.zero;
+            beanCollider.height = 2f;
+            beanCollider.center = new Vector3(0, 0, 0);
+            beanCollider.radius = 0.5f;
+        }
     }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        
-    }
-
-
-    //private void OnEnable()
-    //{
-    //    input.Ingame.Enable();
-    //}
-    //private void OnDisable()
-    //{
-    //    input.Ingame.Disable();
-    //}
 }
