@@ -8,7 +8,7 @@ public class Movement : MonoBehaviour
     InputActions input;
     Rigidbody rb;
     GroundCheck groundCheck;
-
+    Vector2 moveDir;
     bool onGround = false;
 
     void Start()
@@ -24,7 +24,8 @@ public class Movement : MonoBehaviour
     }
     private void OnMove(InputValue movementValue)
     {
-        
+        moveDir = movementValue.Get<Vector2>();
+        rb.AddForce(new Vector3(moveDir.x, 0, moveDir.y));
     }
 
     private void OnJump(InputValue value)

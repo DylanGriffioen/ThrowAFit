@@ -14,9 +14,9 @@ public class RandomObjectColor : MonoBehaviour
     private void ApplyRandomColorMaterialToPlayer()
     {
         if (useRandomColor)
+        {
             color = new Color(Random.Range(0, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f);
-            //color = new ColorSHV();
-
+        }
         gameObject.GetComponent<MeshRenderer>().material.color = color;
     }
 }
