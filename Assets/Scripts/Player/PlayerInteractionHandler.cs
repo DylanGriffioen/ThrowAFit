@@ -35,7 +35,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     }
     private void Update()
     {
-        ExtDebug.DrawBox(_lootArea.position, _lootArea.localScale, transform.rotation, Color.red);
+        //ExtDebug.DrawBox(_lootArea.position, _lootArea.localScale, transform.rotation, Color.red);
     }
 
     private void OnPickupDrop(InputValue movementValue)
