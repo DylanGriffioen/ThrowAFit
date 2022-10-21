@@ -11,6 +11,8 @@ public class Movement : MonoBehaviour
     Transform bean;
     GroundCheck groundCheck;
     CapsuleCollider beanCollider;
+    InputActions input;
+
 
     Vector3 origScale;
     Vector2 inputDir, moveDir;
@@ -20,6 +22,7 @@ public class Movement : MonoBehaviour
 
     void Start()
     {
+        input = new InputActions();
         rb = GetComponent<Rigidbody>();
         groundCheck = transform.GetChild(3).GetComponent<GroundCheck>();
         bean = transform.GetChild(0);
@@ -72,7 +75,6 @@ public class Movement : MonoBehaviour
             bean.localPosition = new Vector3(0, -0.5f, 0);
             beanCollider.height = 1f;
             beanCollider.center = new Vector3(0, -0.5f, 0);
-            beanCollider.radius = 0.65f;
         }
         //OnCrouchUp
         else
@@ -82,7 +84,6 @@ public class Movement : MonoBehaviour
             bean.localPosition = Vector3.zero;
             beanCollider.height = 2f;
             beanCollider.center = new Vector3(0, 0, 0);
-            beanCollider.radius = 0.5f;
         }
     }
 }

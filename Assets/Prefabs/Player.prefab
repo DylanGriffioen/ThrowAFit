@@ -172,6 +172,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3532698195926143568}
+  - component: {fileID: 4288648201276639327}
   - component: {fileID: 3532698195926143582}
   - component: {fileID: 3532698195926143569}
   m_Layer: 7
@@ -196,6 +197,22 @@ Transform:
   m_Father: {fileID: 65884730848045831}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &4288648201276639327
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3532698195926143571}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!135 &3532698195926143582
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -231,12 +248,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 65884730848045831}
+  - component: {fileID: 5058244220094017771}
   - component: {fileID: 8397378352645064072}
   - component: {fileID: 1911377793736643983}
   - component: {fileID: 2424796254032310140}
   - component: {fileID: 7614497596436494211}
   - component: {fileID: 8936311384570300442}
-  - component: {fileID: 513922249427585442}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -263,6 +280,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &5058244220094017771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3959640773740113304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a7b3cfb1fec7f64fa3d51459f584480, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8397378352645064072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,7 +354,7 @@ MonoBehaviour:
     m_ActionId: e355ec04-fae1-4cc2-bdbc-1e04f94dd9e9
     m_ActionName: Ingame/Pause[/Keyboard/escape]
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
+  m_DefaultControlScheme: Keyboard
   m_DefaultActionMap: Ingame
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
@@ -399,18 +428,6 @@ MonoBehaviour:
   moveSpeed: 5
   jumpForce: 10
   smoothTurnTime: 0.07
---- !u!114 &513922249427585442
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3959640773740113304}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c142fe89859bd349a1a365fa5e6a6c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &5463516734186373221
 GameObject:
   m_ObjectHideFlags: 0
@@ -421,7 +438,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7583691164122954248}
   - component: {fileID: 5287872057129988813}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: LootArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -451,7 +468,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5463516734186373221}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
