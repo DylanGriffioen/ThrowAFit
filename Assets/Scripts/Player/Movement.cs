@@ -16,7 +16,9 @@ public class Movement : MonoBehaviour
 
     Vector3 origScale;
     Vector2 inputDir, moveDir;
-    bool onGround, crouching = false;
+    bool onGround, crouching;
+    [System.NonSerialized] public bool holdingItem;
+    [System.NonSerialized] public float heldItemMass = 1f;
     float targetAngle, smoothAngle, smoothTurnVelocity, _moveSpeed;
     
 
@@ -40,6 +42,7 @@ public class Movement : MonoBehaviour
     {
         _moveSpeed = crouching ? moveSpeed / 2f : moveSpeed; //If crouching, halve moveSpeed.
         //_moveSpeed is editable in code while being able to adjust default moveSpeed in editor.
+        if (holdingItem && heldItemMass > 1f) { _moveSpeed /= heldItemMass; } //If holding item, divide speed by mass of held item
         moveDir = inputDir * _moveSpeed; //inputDir is the normalized direction, moveDir includes moveSpeed
         rb.velocity = new Vector3(moveDir.x, rb.velocity.y, moveDir.y); //Assign velocity and keep current y-component of velocity
 

@@ -5,12 +5,15 @@ using UnityEngine.InputSystem;
 
 public class ItemInteraction : MonoBehaviour
 {
+    Movement movementScript;
     Transform itemSlot;
     GameObject heldObject = null;
     List<GameObject> objectsInLootArea = new List<GameObject>();
+    float mass, drag, angularDrag;
     void Awake()
     {
         itemSlot = transform.parent.GetChild(2);
+        movementScript = transform.parent.GetComponent<Movement>();
     }
     void OnPickupDrop()
     {
@@ -33,18 +36,34 @@ public class ItemInteraction : MonoBehaviour
 
             //Pick up object
             heldObject = objectsInLootArea[closestIndex];
+            objectsInLootArea.RemoveAt(closestIndex);
             var heldObjectTransform = heldObject.transform;
             heldObjectTransform.parent = itemSlot;
             heldObjectTransform.localPosition = Vector3.zero;
             heldObjectTransform.localRotation = Quaternion.identity;
-            Destroy(heldObject.GetComponent<Rigidbody>());
+
+            //Store values and destroy the Rigidbody component
+            var rb = heldObject.GetComponent<Rigidbody>();
+            mass = rb.mass;
+            drag = rb.drag;
+            angularDrag = rb.angularDrag;
+            Destroy(rb);
+
+            movementScript.holdingItem = true;
+            movementScript.heldItemMass = mass;
         }
 
         //Drop
         else if (itemSlot.childCount != 0)
         {
+            movementScript.holdingItem = false;
             heldObject.transform.parent = null;
-            heldObject.AddComponent<Rigidbody>();
+
+            //Add Rigidbody and assign stored values
+            var rb = heldObject.AddComponent<Rigidbody>();
+            rb.mass = mass;
+            rb.drag = drag;
+            rb.angularDrag = angularDrag;
         }
     }
     void OnThrow()
@@ -56,8 +75,16 @@ public class ItemInteraction : MonoBehaviour
         }
 
         //Throw
+        movementScript.holdingItem = false;
         heldObject.transform.parent = null;
-        heldObject.AddComponent<Rigidbody>();
+
+        //Add Rigidbody and assign stored values
+        var rb = heldObject.AddComponent<Rigidbody>();
+        rb.mass = mass;
+        rb.drag = drag;
+        rb.angularDrag = angularDrag;
+
+        //Call throw function from throw script
         var throwScript = heldObject.GetComponent<Throw2>();
         throwScript.thrower = transform.parent;
         throwScript.ThrowItem();
