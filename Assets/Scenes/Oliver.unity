@@ -231,47 +231,16 @@ GameObject:
   - component: {fileID: 507060551}
   - component: {fileID: 507060550}
   - component: {fileID: 507060549}
-  - component: {fileID: 507060548}
+  - component: {fileID: 507060554}
   - component: {fileID: 507060552}
-  m_Layer: 0
+  - component: {fileID: 507060553}
+  m_Layer: 6
   m_Name: Test cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &507060548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 507060547}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a64814e31333cd4fb2546ffedb1aed6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _throwableItemLayerNumber: 6
-  _useUnityGravitySystem: 1
-  _gravityForce: -9.81
-  _throwHeightForce: 1
-  _throwHeightForceMultiplier: 1
-  _throwForwardForce: 1
-  _throwForwardForceMultiplier: 1000
-  _isThrown: 0
-  _maxFlyingTime: 10
-  _currentFlyingTime: 0
-  _playerImpactForce: 5
-  _playerImpactForceMultiplier: 5
-  _destroyOnHit: 0
-  _destroyOnPlayerHit: 0
-  _OnHitAudioClip: {fileID: 0}
-  _itemMass: 1
-  _itemDrag: 0
-  _itemAngularDrag: 0
-  _rb: {fileID: 0}
-  _col: {fileID: 0}
 --- !u!23 &507060549
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -350,6 +319,38 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &507060553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 507060547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc338de116d080448a22a71c62963ada, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forwardForce: 10
+  upForce: 3
+  knockback: 2
+  destroyOnImpact: 0
+--- !u!54 &507060554
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 507060547}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &626685146
 GameObject:
   m_ObjectHideFlags: 0
@@ -733,50 +734,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1258449729}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a64814e31333cd4fb2546ffedb1aed6, type: 3}
+  m_Script: {fileID: 11500000, guid: cc338de116d080448a22a71c62963ada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _throwableItemLayerNumber: 0
-  _useUnityGravitySystem: 1
-  _gravityForce: -9.81
-  _throwHeightForce: 1
-  _throwHeightForceMultiplier: 1
-  _throwForwardForce: 1
-  _throwForwardForceMultiplier: 1000
-  _isThrown: 0
-  _maxFlyingTime: 10
-  _currentFlyingTime: 0
-  _playerImpactForce: 5
-  _playerImpactForceMultiplier: 1
-  _destroyOnHit: 0
-  _destroyOnPlayerHit: 0
-  _OnHitAudioClip: {fileID: 0}
-  _itemMass: 1
-  _itemDrag: 0
-  _itemAngularDrag: 0
-  _rb: {fileID: 0}
-  _col: {fileID: 0}
---- !u!1 &1318373915 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5463516734186373221, guid: 1df4bf15e01d20346a57513c16deaa29, type: 3}
-  m_PrefabInstance: {fileID: 513922249427585370}
-  m_PrefabAsset: {fileID: 0}
---- !u!54 &1318373918
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1318373915}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 126
-  m_CollisionDetection: 0
+  forwardForce: 10
+  upForce: 3
+  knockback: 2
+  destroyOnImpact: 0
 --- !u!1 &1393604666
 GameObject:
   m_ObjectHideFlags: 0
@@ -1225,29 +1189,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2107219682}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a64814e31333cd4fb2546ffedb1aed6, type: 3}
+  m_Script: {fileID: 11500000, guid: cc338de116d080448a22a71c62963ada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _throwableItemLayerNumber: 0
-  _useUnityGravitySystem: 1
-  _gravityForce: -9.81
-  _throwHeightForce: 1
-  _throwHeightForceMultiplier: 1
-  _throwForwardForce: 1
-  _throwForwardForceMultiplier: 1000
-  _isThrown: 0
-  _maxFlyingTime: 10
-  _currentFlyingTime: 0
-  _playerImpactForce: 5
-  _playerImpactForceMultiplier: 1
-  _destroyOnHit: 0
-  _destroyOnPlayerHit: 0
-  _OnHitAudioClip: {fileID: 0}
-  _itemMass: 1
-  _itemDrag: 0
-  _itemAngularDrag: 0
-  _rb: {fileID: 0}
-  _col: {fileID: 0}
+  forwardForce: 10
+  upForce: 3
+  knockback: 2
+  destroyOnImpact: 0
 --- !u!1 &2111922367
 GameObject:
   m_ObjectHideFlags: 0

@@ -6,13 +6,11 @@ using UnityEngine.InputSystem;
 public class ItemInteraction : MonoBehaviour
 {
     Transform itemSlot;
-    Transform battleField;
     GameObject heldObject = null;
     List<GameObject> objectsInLootArea = new List<GameObject>();
     void Awake()
     {
         itemSlot = transform.parent.GetChild(2);
-        battleField = GameObject.Find("Battlefield").transform;
     }
     void OnPickupDrop()
     {
@@ -45,7 +43,7 @@ public class ItemInteraction : MonoBehaviour
         //Drop
         else if (itemSlot.childCount != 0)
         {
-            heldObject.transform.parent = battleField;
+            heldObject.transform.parent = null;
             heldObject.AddComponent<Rigidbody>();
         }
     }
@@ -58,7 +56,7 @@ public class ItemInteraction : MonoBehaviour
         }
 
         //Throw
-        heldObject.transform.parent = battleField;
+        heldObject.transform.parent = null;
         heldObject.AddComponent<Rigidbody>();
         var throwScript = heldObject.GetComponent<Throw2>();
         throwScript.thrower = transform.parent;
