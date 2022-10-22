@@ -756,6 +756,27 @@ MonoBehaviour:
   _itemAngularDrag: 0
   _rb: {fileID: 0}
   _col: {fileID: 0}
+--- !u!1 &1318373915 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5463516734186373221, guid: 1df4bf15e01d20346a57513c16deaa29, type: 3}
+  m_PrefabInstance: {fileID: 513922249427585370}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &1318373918
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318373915}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &1393604666
 GameObject:
   m_ObjectHideFlags: 0

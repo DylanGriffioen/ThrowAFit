@@ -250,7 +250,6 @@ GameObject:
   - component: {fileID: 65884730848045831}
   - component: {fileID: 5058244220094017771}
   - component: {fileID: 8397378352645064072}
-  - component: {fileID: 1911377793736643983}
   - component: {fileID: 2424796254032310140}
   - component: {fileID: 7614497596436494211}
   - component: {fileID: 8936311384570300442}
@@ -305,7 +304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: eed36caed61b6db498b47251017b539d, type: 3}
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 1
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -358,31 +357,6 @@ MonoBehaviour:
   m_DefaultActionMap: Ingame
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &1911377793736643983
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3959640773740113304}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0219add2ae16b344b639dcd422503d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  size: {x: 0, y: 0, z: 0}
-  _itemSlot: {fileID: 8592105373129794962}
-  _canPickup: 1
-  _throwableItemMask:
-    serializedVersion: 2
-    m_Bits: 64
-  _lootArea: {fileID: 7583691164122954248}
-  _lootAreaCollider: {fileID: 5287872057129988813}
-  _maxPickupDistance: 1
-  _canDrop: 1
-  _dropLocation: {x: 0, y: 0, z: 0}
-  _canThrow: 1
-  _canPause: 1
 --- !u!136 &2424796254032310140
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -438,6 +412,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7583691164122954248}
   - component: {fileID: 5287872057129988813}
+  - component: {fileID: 1318373921}
   m_Layer: 9
   m_Name: LootArea
   m_TagString: Untagged
@@ -453,8 +428,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5463516734186373221}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.87}
-  m_LocalScale: {x: 1, y: 2.25, z: 1.4}
+  m_LocalPosition: {x: -0, y: 0, z: 1.05}
+  m_LocalScale: {x: 2, y: 2, z: 1.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 65884730848045831}
@@ -473,6 +448,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1318373921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5463516734186373221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0219add2ae16b344b639dcd422503d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6879093909792464932
 GameObject:
   m_ObjectHideFlags: 0

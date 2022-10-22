@@ -1,4 +1,5 @@
-
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,9 +8,9 @@ public class PlayerInteractionHandler : MonoBehaviour
     [SerializeField] Vector3 size;
 
     private InputActions _input;
-
-    [Header("Item slot")]
-    [SerializeField] Transform _itemSlot;
+    Transform itemSlot;
+    Transform battleField;
+    GameObject heldObject = null;
 
     [Header("Pickup")]
     [SerializeField] bool _canPickup = true;
@@ -28,20 +29,25 @@ public class PlayerInteractionHandler : MonoBehaviour
     [Header("Pause")]
     [SerializeField] bool _canPause = true;
 
+    List<GameObject> objectsInLootArea = new List<GameObject>();
     void Awake()
     {
         _input = new InputActions();
-
+        itemSlot = transform.parent.GetChild(2);
+        battleField = GameObject.Find("Battlefield").transform;
     }
-    private void Update()
+    void Start()
     {
-        //ExtDebug.DrawBox(_lootArea.position, _lootArea.localScale, transform.rotation, Color.red);
+
+    }
+    void Update()
+    {
     }
 
-    private void OnPickupDrop(InputValue movementValue)
+    private void OnPickupDropOLD(InputValue value)
     {
         Debug.Log("pickup/drop");
-        if (!PlayerHasItem())
+        if (itemSlot.childCount != 0)
         {
             //Pickup
             if (_canPickup)
@@ -69,7 +75,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                          * Of course when it is unparented, revert the scale back.
                          */
 
-                        item.transform.parent = _itemSlot;
+                        item.transform.parent = itemSlot;
                         item.GetComponent<Collider>().enabled = false;
                         item.GetComponent<Rigidbody>().useGravity = false;
                         item.transform.localPosition = Vector3.zero;
@@ -85,9 +91,9 @@ public class PlayerInteractionHandler : MonoBehaviour
             if (_canDrop)
             {
                 //Drop
-                if (_itemSlot.childCount == 1)
+                if (itemSlot.childCount == 1)
                 {
-                    GameObject item = _itemSlot.GetChild(0).gameObject;
+                    GameObject item = itemSlot.GetChild(0).gameObject;
 
                     if (item != null)
                     {
@@ -99,33 +105,59 @@ public class PlayerInteractionHandler : MonoBehaviour
             }
         }
     }
-
-
-    private bool PlayerHasItem()
+    void OnPickupDrop()
     {
-        return (_itemSlot.transform.childCount != 0);
-    }
+        //Guard clause
+        if (!_canPickup)
+        {
+            return;
+        }
 
+        //Pickup
+        if (itemSlot.childCount == 0 && objectsInLootArea.Count != 0)
+        {
+            //Find closest object in loot area
+            float objectDistance;
+            float closestDistance = (objectsInLootArea[0].transform.position - transform.parent.position).magnitude;
+            int closestIndex = 0;
+            for (int i = 1; i < objectsInLootArea.Count; i++)
+            {
+                objectDistance = (objectsInLootArea[i].transform.position - transform.parent.position).magnitude;
+                if (objectDistance < closestDistance)
+                {
+                    closestDistance = objectDistance;
+                    closestIndex = i;
+                }
+            }
+
+            //Pick up object
+            heldObject = objectsInLootArea[closestIndex];
+            var heldObjectTransform = heldObject.transform;
+            heldObjectTransform.parent = itemSlot;
+            heldObjectTransform.localPosition = Vector3.zero;
+            heldObjectTransform.localRotation = Quaternion.identity;
+            Destroy(heldObject.GetComponent<Rigidbody>());
+        }
+
+        //Drop
+        else if(itemSlot.childCount != 0)
+        {
+            heldObject.transform.parent = battleField;
+            heldObject.AddComponent<Rigidbody>();
+        }
+    }
     private void OnThrow(InputValue value)
     {
         //Throw
-        if (_canThrow)
+        if (!_canThrow || itemSlot.childCount == 0 || heldObject == null)
         {
-            if(_itemSlot.childCount == 1)
-            {
-                GameObject item = _itemSlot.GetChild(0).gameObject;
-
-                if (item != null)
-                {
-                    ThrowableItem throwableItem = item.GetComponent<ThrowableItem>();
-
-                    if(throwableItem != null)
-                    {
-                        throwableItem.ThrowItem();
-                    }
-                }
-            }
+            return;
         }
+        heldObject.transform.parent = battleField;
+        heldObject.AddComponent<Rigidbody>();
+        var throwScript = heldObject.GetComponent<Throw2>();
+        throwScript.thrower = transform.parent;
+        throwScript.ThrowItem();
     }
 
     private void OnPause(InputValue value)
@@ -135,6 +167,7 @@ public class PlayerInteractionHandler : MonoBehaviour
         {
 
         }
+        //foreach (GameObject item in )
     }
 
 
@@ -145,5 +178,14 @@ public class PlayerInteractionHandler : MonoBehaviour
     private void OnDisable()
     {
         _input.Ingame.Disable();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        objectsInLootArea.Add(other.gameObject);
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        objectsInLootArea.Remove(other.gameObject);
     }
 }

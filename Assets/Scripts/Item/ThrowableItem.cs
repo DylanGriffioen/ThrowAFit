@@ -5,7 +5,6 @@ using UnityEngine;
 public class ThrowableItem : MonoBehaviour
 {
 
-    [SerializeField] int _throwableItemLayerNumber;
 
 
     [Header("Gravity")]
@@ -41,7 +40,6 @@ public class ThrowableItem : MonoBehaviour
 
     private void Awake()
     {
-        UpdateGameobjectLayer();
         _rb = GetRigidbody();
         _col = GetCollider();
     }
@@ -59,13 +57,6 @@ public class ThrowableItem : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-    }
-
-    private void UpdateGameobjectLayer()
-    {
-        if(gameObject.layer != _throwableItemLayerNumber)
-            gameObject.layer = _throwableItemLayerNumber;
-
     }
     private Rigidbody GetRigidbody()
     {
