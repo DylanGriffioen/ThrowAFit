@@ -8,13 +8,13 @@ public class Movement : MonoBehaviour
     public float moveSpeed, jumpForce, smoothTurnTime;
 
     Rigidbody rb;
-    Transform bean;
+    Transform model;
     GroundCheck groundCheck;
     CapsuleCollider beanCollider;
     InputActions input;
 
 
-    Vector3 origScale;
+    Vector3 origScale, origLocalPos;
     Vector2 inputDir, moveDir;
     bool onGround, crouching;
     [System.NonSerialized] public bool holdingItem;
@@ -27,8 +27,9 @@ public class Movement : MonoBehaviour
         input = new InputActions();
         rb = GetComponent<Rigidbody>();
         groundCheck = transform.GetChild(3).GetComponent<GroundCheck>();
-        bean = transform.GetChild(0);
-        origScale = bean.localScale;
+        model = transform.GetChild(0);
+        origScale = model.localScale;
+        origLocalPos = model.localPosition;
         _moveSpeed = moveSpeed;
         beanCollider = GetComponent<CapsuleCollider>();
     }
@@ -74,19 +75,19 @@ public class Movement : MonoBehaviour
         if (value.isPressed)
         {
             crouching = true;
-            bean.localScale = new Vector3(origScale.x * 1.3f, origScale.y * 0.5f, origScale.z * 1.3f);
-            bean.localPosition = new Vector3(0, -0.5f, 0);
-            beanCollider.height = 1f;
-            beanCollider.center = new Vector3(0, -0.5f, 0);
+            model.localScale = new Vector3(origScale.x * 1.3f, origScale.y * 0.5f, origScale.z * 1.3f);
+            //model.localPosition = new Vector3(0, -0.5f, 0);
+            //beanCollider.height = 1f;
+            //beanCollider.center = new Vector3(0, -0.5f, 0);
         }
         //OnCrouchUp
         else
         {
             crouching = false;
-            bean.localScale = origScale;
-            bean.localPosition = Vector3.zero;
-            beanCollider.height = 2f;
-            beanCollider.center = new Vector3(0, 0, 0);
+            model.localScale = origScale;
+            //model.localPosition = Vector3.zero;
+            //beanCollider.height = 2f;
+            //beanCollider.center = new Vector3(0, 0, 0);
         }
     }
 }

@@ -47,7 +47,6 @@ public class Throw2 : MonoBehaviour
             }
             else
             {
-                print("Here!");
                 ignoreEnds = true;
                 Physics.IgnoreCollision(thrower.GetComponent<Collider>(), collider, false);
             }

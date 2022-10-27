@@ -5,6 +5,7 @@ using UnityEngine;
 public class Respawn : MonoBehaviour
 {
     Vector3 origPos;
+    Rigidbody rb;
     void Start()
     {
         origPos = transform.position;
@@ -15,6 +16,8 @@ public class Respawn : MonoBehaviour
         if (transform.position.y < 2.5f)
         {
             transform.position = origPos;
+            rb = GetComponent<Rigidbody>();
+            rb.velocity = Vector3.zero;
         }
     }
 }

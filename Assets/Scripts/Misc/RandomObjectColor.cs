@@ -17,6 +17,6 @@ public class RandomObjectColor : MonoBehaviour
         {
             color = new Color(Random.Range(0, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f);
         }
-        gameObject.GetComponent<MeshRenderer>().material.color = color;
+        gameObject.GetComponent<SkinnedMeshRenderer>().material.color = color;
     }
 }
