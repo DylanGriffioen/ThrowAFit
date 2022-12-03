@@ -4,64 +4,41 @@ using UnityEngine;
 
 public class Throw2 : MonoBehaviour
 {
-
-
-    Rigidbody rb;
-    Collider collider;
-    public float forwardForce = 20f, upForce = 4f, knockback = 2f;
+    
+    public float forwardForce = 20f, angle = 15f, knockback = 2f;
     public bool destroyOnImpact = false;
     [System.NonSerialized] public Transform thrower = null;
-    Transform prevThrower = null;
 
-
-    float throwTimer = 0f;
+    Rigidbody rb;
+    Collider coll;
     bool isThrown;
-    private bool ignoreEnds;
+    float upForce;
 
     void Start()
     {
-        collider = GetComponent<Collider>();
+        coll = GetComponent<Collider>();
+        upForce = forwardForce*Mathf.Tan(angle * Mathf.Deg2Rad);
     }
     public void ThrowItem()
     {
         isThrown = true;
         rb = GetComponent<Rigidbody>();
-        throwTimer = 0f;
-        ignoreEnds = false;
-        Physics.IgnoreCollision(thrower.GetComponent<Collider>(), collider, true);
+        Physics.IgnoreCollision(thrower.GetComponent<Collider>(), coll, true);
         rb.AddForce(Mathf.Sqrt(rb.mass)*(transform.forward * forwardForce + Vector3.up * upForce), ForceMode.Impulse);
-    }
-
-    void Update()
-    {
-        ItemThrown();
-    }
-
-    void ItemThrown()
-    {
-        if (isThrown && !ignoreEnds)
-        {
-            if (throwTimer < 0.1f)
-            {
-                throwTimer += Time.deltaTime;
-            }
-            else
-            {
-                ignoreEnds = true;
-                Physics.IgnoreCollision(thrower.GetComponent<Collider>(), collider, false);
-            }
-        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        if (isThrown)
+        if (!isThrown) { return; }
+        if (collision.rigidbody != null)
         {
-            if (collision.rigidbody != null)
-            {
-                collision.rigidbody.AddForce(rb.velocity * rb.mass * knockback, ForceMode.Impulse);
-            }
-            isThrown = false;
+            collision.rigidbody.AddForce(rb.velocity * rb.mass * knockback, ForceMode.Impulse);
+        }
+        isThrown = false;
+        Physics.IgnoreCollision(thrower.GetComponent<Collider>(), coll, false);
+        if (destroyOnImpact)
+        {
+            Destroy(gameObject);
         }
     }
 }

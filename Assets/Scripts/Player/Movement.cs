@@ -5,18 +5,16 @@ using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
-    public float baseMoveSpeed, jumpHeight, smoothTurnTime;
+    public float baseMoveSpeed, jumpHeight, throwMoveImpulse, throwEndLag, smoothTurnTime;
 
     Rigidbody rb;
     Transform model;
-    CapsuleCollider beanCollider;
-    InputActions input;
     Animator animator;
-
 
     Vector3 origScale, origLocalPos;
     Vector2 inputDir, moveDir;
-    bool crouching, moving, moving2, jumping, falling, leftGround, jumpingLeftGround;
+    bool crouching, movePressed, moving, movingLastFrame, jumping, falling, jumpingLeftGround, throwing;
+    bool movementEnabled = true;
     [System.NonSerialized] public bool holdingItem, onGround;
     [System.NonSerialized] public float heldItemMass = 1f;
     float targetAngle, smoothAngle, smoothTurnVelocity, moveSpeed, moveSpeedMult, jumpSpeed, jumpHeightMult, jumpPercent, speedMultLastFrame, gravity;
@@ -24,9 +22,7 @@ public class Movement : MonoBehaviour
 
     void Start()
     {
-        input = new InputActions();
         rb = GetComponent<Rigidbody>();
-        beanCollider = GetComponent<CapsuleCollider>();
         gravity = Physics.gravity.magnitude;
 
         model = transform.GetChild(0);
@@ -43,6 +39,15 @@ public class Movement : MonoBehaviour
     }
     void Initial()
     {
+        //Move
+        moving = movePressed && movementEnabled;
+        if (moving != movingLastFrame)
+        {
+            animator.SetBool("Moving", moving);
+        }
+        movingLastFrame = moving;
+
+        //Jump
         if (!jumping)
         {
             if (!onGround && !falling)
@@ -85,8 +90,7 @@ public class Movement : MonoBehaviour
         inputDir = ctx.ReadValue<Vector2>();
         if (ctx.started || ctx.canceled)
         {
-            moving = ctx.started;
-            animator.SetBool("Moving", moving);
+            movePressed = ctx.started;
         }
         if (ctx.canceled)
         {
@@ -135,7 +139,26 @@ public class Movement : MonoBehaviour
         }
         animator.SetFloat("Jump Percent", jumpPercent);
     }
-
+    public void Throw()
+    {
+        throwing = true;
+        moving = false;
+        movementEnabled = false;
+        Invoke("EndThrow", throwEndLag);
+        transform.rotation = Quaternion.Euler(new Vector3(0, targetAngle, 0));
+        if (onGround)
+        {
+            var inputDir3 = new Vector3(inputDir.x, 0, inputDir.y);
+            rb.velocity = Vector3.zero;
+            rb.AddForce((moving?inputDir3:transform.forward)*throwMoveImpulse, ForceMode.Impulse);
+        }
+    }
+    void EndThrow()
+    {
+        throwing = false;
+        movementEnabled = true;
+        animator.SetBool("Throwing", false);
+    }
     public void OnCrouch(InputAction.CallbackContext ctx)
     {
         //OnCrouchDown

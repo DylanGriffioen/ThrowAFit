@@ -11,6 +11,7 @@ public class ItemInteraction : MonoBehaviour
     List<GameObject> objectsInLootArea = new List<GameObject>();
     float mass, drag, angularDrag;
     Animator animator;
+    bool throwNextFrame;
     void Awake()
     {
         itemSlot = transform.parent.GetChild(2);
@@ -43,7 +44,7 @@ public class ItemInteraction : MonoBehaviour
             objectsInLootArea.RemoveAt(closestIndex);
             var heldObjectTransform = heldObject.transform;
             heldObjectTransform.parent = itemSlot;
-            heldObjectTransform.localPosition = Vector3.zero;
+            heldObjectTransform.localPosition = new Vector3(0f,heldObjectTransform.localScale.y/2f,0f);
             heldObjectTransform.localRotation = Quaternion.identity;
 
             //Store values and destroy the Rigidbody component
@@ -80,7 +81,19 @@ public class ItemInteraction : MonoBehaviour
     public void OnThrow(InputAction.CallbackContext ctx)
     {
         if (itemSlot.childCount == 0 || heldObject == null || !ctx.performed) { return; }
-
+        movementScript.Throw();
+        throwNextFrame = true;
+    }
+    void Update()
+    {
+        if (throwNextFrame)
+        {
+            throwNextFrame = false;
+            ThrowObject();
+        }
+    }
+    void ThrowObject()
+    {
         //Throw
         movementScript.holdingItem = false;
         heldObject.transform.parent = null;
@@ -98,6 +111,7 @@ public class ItemInteraction : MonoBehaviour
 
         //Switch carrying bool in animator
         animator.SetBool("Carrying", false);
+        animator.SetBool("Throwing", true);
         animator.SetTrigger("Throw");
     }
     private void OnTriggerEnter(Collider other)
