@@ -12,8 +12,8 @@ public class MainMenu : MonoBehaviour
         // Need to add scene hierarchy to "file>build settings" when the scenes are ready
         // Now only prints text
         // Switching to the next scene in hierarchy
-        // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        Debug.Log("Load the game scene!");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        //Debug.Log("Load the game scene!");
     }
 
     public void Quit()
