@@ -10,6 +10,7 @@ public class Movement : MonoBehaviour
     Rigidbody rb;
     Transform model;
     Animator animator;
+    Transform itemSlot;
 
     Vector3 origScale, origLocalPos;
     Vector2 inputDir, moveDir;
@@ -26,6 +27,7 @@ public class Movement : MonoBehaviour
         gravity = Physics.gravity.magnitude;
 
         model = transform.GetChild(0);
+        itemSlot = transform.GetChild(2);
         origScale = model.localScale;
         origLocalPos = model.localPosition;
         animator = model.GetComponent<Animator>();
@@ -34,6 +36,7 @@ public class Movement : MonoBehaviour
     void Update()
     {
         Initial();
+        ItemSlotMove();
         Directional();
         Jumping();
     }
@@ -63,6 +66,19 @@ public class Movement : MonoBehaviour
         jumpHeightMult = 1f;
         if (holdingItem && heldItemMass > 1f) { jumpHeightMult /= heldItemMass; } //If holding item, divide jump speed multiplier by mass of held item
         
+    }
+    void ItemSlotMove()
+    {
+        if (moving && onGround)
+        {
+            var lerpValue = Mathf.Lerp(itemSlot.localPosition.z, 0.1f,0.2f);
+            itemSlot.localPosition = new Vector3(itemSlot.localPosition.x, itemSlot.localPosition.y, lerpValue);
+        }
+        else
+        {
+            var lerpValue = Mathf.Lerp(itemSlot.localPosition.z, 0, 0.2f);
+            itemSlot.localPosition = new Vector3(itemSlot.localPosition.x, itemSlot.localPosition.y, lerpValue);
+        }
     }
     void Directional()
     {

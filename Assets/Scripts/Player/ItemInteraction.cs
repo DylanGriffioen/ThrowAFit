@@ -105,7 +105,7 @@ public class ItemInteraction : MonoBehaviour
         rb.angularDrag = angularDrag;
 
         //Call throw function from throw script
-        var throwScript = heldObject.GetComponent<Throw2>();
+        var throwScript = heldObject.GetComponent<ThrowableItem>();
         throwScript.thrower = transform.parent;
         throwScript.ThrowItem();
 

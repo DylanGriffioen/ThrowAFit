@@ -155,7 +155,7 @@ public class PlayerInteractionHandler : MonoBehaviour
         }
         heldObject.transform.parent = battleField;
         heldObject.AddComponent<Rigidbody>();
-        var throwScript = heldObject.GetComponent<Throw2>();
+        var throwScript = heldObject.GetComponent<ThrowableItem>();
         throwScript.thrower = transform.parent;
         throwScript.ThrowItem();
     }
