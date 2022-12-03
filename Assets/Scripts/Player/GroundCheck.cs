@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class GroundCheck : MonoBehaviour
 {
-    public bool onGround = true;
-    void Start()
+    Movement movementScript;
+    Animator animator;
+    bool onGround;
+    void Awake()
     {
-        
+        movementScript = transform.GetComponentInParent<Movement>();
+        animator = transform.parent.GetComponentInChildren<Animator>();
     }
 
     void Update()
@@ -17,10 +20,15 @@ public class GroundCheck : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        if (onGround) { return; }
+        movementScript.onGround = true;
+        animator.SetBool("On Ground", true);
         onGround = true;
     }
     private void OnTriggerExit(Collider other)
     {
         onGround = false;
+        movementScript.onGround = false;
+        animator.SetBool("On Ground", false);
     }
 }

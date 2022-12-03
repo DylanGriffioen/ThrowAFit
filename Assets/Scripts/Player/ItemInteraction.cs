@@ -10,13 +10,17 @@ public class ItemInteraction : MonoBehaviour
     GameObject heldObject = null;
     List<GameObject> objectsInLootArea = new List<GameObject>();
     float mass, drag, angularDrag;
+    Animator animator;
     void Awake()
     {
         itemSlot = transform.parent.GetChild(2);
         movementScript = transform.parent.GetComponent<Movement>();
+        animator = transform.parent.GetComponentInChildren<Animator>();
     }
-    void OnPickupDrop()
+    public void OnPickupDrop(InputAction.CallbackContext ctx)
     {
+        if (!ctx.performed) { return; }
+
         //Pickup
         if (itemSlot.childCount == 0 && objectsInLootArea.Count != 0)
         {
@@ -49,8 +53,12 @@ public class ItemInteraction : MonoBehaviour
             angularDrag = rb.angularDrag;
             Destroy(rb);
 
+            //Pass values to movement script
             movementScript.holdingItem = true;
             movementScript.heldItemMass = mass;
+
+            //Switch carrying bool in animator
+            animator.SetBool("Carrying", true);
         }
 
         //Drop
@@ -64,15 +72,14 @@ public class ItemInteraction : MonoBehaviour
             rb.mass = mass;
             rb.drag = drag;
             rb.angularDrag = angularDrag;
+
+            //Switch carrying bool in animator
+            animator.SetBool("Carrying", false);
         }
     }
-    void OnThrow()
+    public void OnThrow(InputAction.CallbackContext ctx)
     {
-        //Guard Clause
-        if (itemSlot.childCount == 0 || heldObject == null)
-        {
-            return;
-        }
+        if (itemSlot.childCount == 0 || heldObject == null || !ctx.performed) { return; }
 
         //Throw
         movementScript.holdingItem = false;
@@ -88,6 +95,10 @@ public class ItemInteraction : MonoBehaviour
         var throwScript = heldObject.GetComponent<Throw2>();
         throwScript.thrower = transform.parent;
         throwScript.ThrowItem();
+
+        //Switch carrying bool in animator
+        animator.SetBool("Carrying", false);
+        animator.SetTrigger("Throw");
     }
     private void OnTriggerEnter(Collider other)
     {

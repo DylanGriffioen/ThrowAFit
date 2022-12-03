@@ -5,83 +5,150 @@ using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
-    public float moveSpeed, jumpForce, smoothTurnTime;
+    public float baseMoveSpeed, jumpHeight, smoothTurnTime;
 
     Rigidbody rb;
     Transform model;
-    GroundCheck groundCheck;
     CapsuleCollider beanCollider;
     InputActions input;
+    Animator animator;
 
 
     Vector3 origScale, origLocalPos;
     Vector2 inputDir, moveDir;
-    bool onGround, crouching;
-    [System.NonSerialized] public bool holdingItem;
+    bool crouching, moving, moving2, jumping, falling, leftGround, jumpingLeftGround;
+    [System.NonSerialized] public bool holdingItem, onGround;
     [System.NonSerialized] public float heldItemMass = 1f;
-    float targetAngle, smoothAngle, smoothTurnVelocity, _moveSpeed;
+    float targetAngle, smoothAngle, smoothTurnVelocity, moveSpeed, moveSpeedMult, jumpSpeed, jumpHeightMult, jumpPercent, speedMultLastFrame, gravity;
     
 
     void Start()
     {
         input = new InputActions();
         rb = GetComponent<Rigidbody>();
-        groundCheck = transform.GetChild(3).GetComponent<GroundCheck>();
+        beanCollider = GetComponent<CapsuleCollider>();
+        gravity = Physics.gravity.magnitude;
+
         model = transform.GetChild(0);
         origScale = model.localScale;
         origLocalPos = model.localPosition;
-        _moveSpeed = moveSpeed;
-        beanCollider = GetComponent<CapsuleCollider>();
+        animator = model.GetComponent<Animator>();
     }
 
     void Update()
     {
-        onGround = groundCheck.onGround; //Update onGround from groundcheck object's collider
+        Initial();
         Directional();
+        Jumping();
+    }
+    void Initial()
+    {
+        if (!jumping)
+        {
+            if (!onGround && !falling)
+            {
+                falling = true;
+                animator.SetTrigger("Fall");
+            }
+            if (falling && onGround)
+            {
+                falling = false;
+            }
+        }
+        jumpHeightMult = 1f;
+        if (holdingItem && heldItemMass > 1f) { jumpHeightMult /= heldItemMass; } //If holding item, divide jump speed multiplier by mass of held item
+        
     }
     void Directional()
     {
-        _moveSpeed = crouching ? moveSpeed / 2f : moveSpeed; //If crouching, halve moveSpeed.
-        //_moveSpeed is editable in code while being able to adjust default moveSpeed in editor.
-        if (holdingItem && heldItemMass > 1f) { _moveSpeed /= heldItemMass; } //If holding item, divide speed by mass of held item
-        moveDir = inputDir * _moveSpeed; //inputDir is the normalized direction, moveDir includes moveSpeed
+        if (!moving) { return; }
+
+        //Directional movement
+        moveSpeedMult = crouching ? 0.5f : 1f; //If crouching, halve moveSpeed.
+        if (holdingItem && heldItemMass > 1f) { moveSpeedMult /= heldItemMass; } //If holding item, divide moveSpeed by mass of held item
+        moveSpeed = baseMoveSpeed * moveSpeedMult;
+        moveDir = inputDir * moveSpeed; //inputDir is the normalized direction, moveDir includes moveSpeed
+        if (moveSpeedMult != speedMultLastFrame)
+        {
+            animator.SetFloat("Speed Multiplier", moveSpeedMult);
+        }
+        speedMultLastFrame = moveSpeedMult;
         rb.velocity = new Vector3(moveDir.x, rb.velocity.y, moveDir.y); //Assign velocity and keep current y-component of velocity
 
         //Smooth rotation
-        if (inputDir.magnitude > 0.125f)
+        targetAngle = (Vector2.SignedAngle(inputDir, Vector2.up) + 360f) % 360f;
+        smoothAngle = Mathf.SmoothDampAngle(transform.rotation.eulerAngles.y, targetAngle, ref smoothTurnVelocity, smoothTurnTime);
+        transform.rotation = Quaternion.Euler(new Vector3(0, smoothAngle, 0));
+    }
+    public void OnMove(InputAction.CallbackContext ctx)
+    {
+        inputDir = ctx.ReadValue<Vector2>();
+        if (ctx.started || ctx.canceled)
         {
-            targetAngle = (Vector2.SignedAngle(inputDir, Vector2.up) + 360f) % 360f;
-            smoothAngle = Mathf.SmoothDampAngle(transform.rotation.eulerAngles.y, targetAngle, ref smoothTurnVelocity, smoothTurnTime);
-            transform.rotation = Quaternion.Euler(new Vector3(0, smoothAngle, 0));
+            moving = ctx.started;
+            animator.SetBool("Moving", moving);
+        }
+        if (ctx.canceled)
+        {
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
         }
     }
-    void OnMove(InputValue movementValue)
+
+    public void OnJump(InputAction.CallbackContext ctx)
     {
-        inputDir = movementValue.Get<Vector2>();
+        if (!onGround) { return; }
+        jumping = true;
+        jumpPercent = 0f;
+        jumpSpeed = Mathf.Sqrt(2f * (gravity/rb.mass) * jumpHeight*jumpHeightMult);
+        rb.velocity = new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z); //Change upward velocity
+
+        animator.SetBool("Jumping", true);
+        animator.SetTrigger("Jump");
     }
 
-    void OnJump(InputValue value)
+    void Jumping()
     {
-        if (!onGround)
+        if (!jumping) { return; }
+        if (rb.velocity.y > 0f)
         {
-            return;
+            jumpPercent = Mathf.InverseLerp(jumpSpeed, 0f, rb.velocity.y);
         }
-        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse); //Add upward impulse
+        else if (!falling)
+        {
+            falling = true;
+            animator.SetTrigger("Fall");
+        }
+        if (jumpPercent > 0.98f)
+        {
+            jumpPercent = 1f;
+        }
+        if (!onGround && !jumpingLeftGround)
+        {
+            jumpingLeftGround = true;
+        }
+        if (jumpingLeftGround && onGround)
+        {
+            jumpingLeftGround = false;
+            jumping = false;
+            falling = false;
+            animator.SetBool("Jumping", false);
+        }
+        animator.SetFloat("Jump Percent", jumpPercent);
     }
 
-    void OnCrouch(InputValue value)
+    public void OnCrouch(InputAction.CallbackContext ctx)
     {
         //OnCrouchDown
-        if (value.isPressed)
+        if (ctx.performed)
         {
             crouching = true;
-            model.localScale = new Vector3(origScale.x * 1.3f, origScale.y * 0.5f, origScale.z * 1.3f);
+            model.localScale = new Vector3(origScale.x * 1.2f, origScale.y * 0.5f, origScale.z * 1.2f);
             //model.localPosition = new Vector3(0, -0.5f, 0);
             //beanCollider.height = 1f;
             //beanCollider.center = new Vector3(0, -0.5f, 0);
         }
         //OnCrouchUp
-        else
+        else if (ctx.canceled)
         {
             crouching = false;
             model.localScale = origScale;
