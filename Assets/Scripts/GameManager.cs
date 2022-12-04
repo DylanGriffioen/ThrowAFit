@@ -53,20 +53,32 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Player count: {PlayerCount}");
     }
 
-    public void NewPlayerJoined()
+    public void PlayerJoined()
     {
         PlayerCount++;
+        _players = GameObject.FindGameObjectsWithTag("Player");
+    }
+
+    public void PlayerLeft()
+    {
+        PlayerCount--;
         _players = GameObject.FindGameObjectsWithTag("Player");
 
     }
 
     public void StartGame()
     {
-        GAME_STATE = GameStates.GAME;
-        DontDestroyPlayersOnLoad();
-        //Swap scene
-        //Spawn players to random locations
-        SceneManager.LoadScene("Game Scene");
+        if(PlayerCount > 0)
+        {
+            GAME_STATE = GameStates.GAME;
+            DontDestroyPlayersOnLoad();
+            PlayerInputManager pim = playerManager.GetComponent<PlayerInputManager>();
+            pim.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
+
+            //Swap scene
+            //Spawn players to random locations
+            SceneManager.LoadScene("Game Scene");
+        }
 
     }
 

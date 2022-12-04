@@ -25,7 +25,7 @@ public class Life : MonoBehaviour
 
     public void Lose(int amount)
     {
-        if (Alive)
+        if (Alive && GameManager.GAME_STATE == GameStates.GAME)
         {
             currentLifes -= amount;
 
