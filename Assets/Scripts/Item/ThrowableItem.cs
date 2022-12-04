@@ -21,14 +21,18 @@ public class ThrowableItem : MonoBehaviour
 
     void Start()
     {
-        forceMultiplier = GameManager._instance.ForceMultiplier > 0 ? GameManager._instance.ForceMultiplier : forceMultiplier;
-        damageMultiplier = GameManager._instance.DamageMultiplier > 0 ? GameManager._instance.DamageMultiplier : damageMultiplier;
+        if (GameManager._instance != null)
+        {
+            forceMultiplier = GameManager._instance.ForceMultiplier > 0 ? GameManager._instance.ForceMultiplier : forceMultiplier;
+            damageMultiplier = GameManager._instance.DamageMultiplier > 0 ? GameManager._instance.DamageMultiplier : damageMultiplier;
+        }
         coll = GetComponent<Collider>();
         upForce = forwardForce*Mathf.Tan(angle * Mathf.Deg2Rad);
     }
+
     private void Update()
     {
-        if (GameManager.GAME_STATE == GameStates.PREGAME)
+        if (GameManager._instance != null)
         {
             forceMultiplier = GameManager._instance.ForceMultiplier > 0 ? GameManager._instance.ForceMultiplier : forceMultiplier;
             damageMultiplier = GameManager._instance.DamageMultiplier > 0 ? GameManager._instance.DamageMultiplier : damageMultiplier;

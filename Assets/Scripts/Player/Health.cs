@@ -14,8 +14,11 @@ public class Health : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        maxHealth = GameManager._instance.MaxHealth > 0 ? GameManager._instance.MaxHealth : maxHealth;
-        respawnTime = GameManager._instance.RespawnTime > 0 ? GameManager._instance.RespawnTime : respawnTime;
+        if (GameManager._instance != null)
+        {
+            maxHealth = GameManager._instance.MaxHealth > 0 ? GameManager._instance.MaxHealth : maxHealth;
+            respawnTime = GameManager._instance.RespawnTime > 0 ? GameManager._instance.RespawnTime : respawnTime;
+        }
         currentHealth = maxHealth;
         alive = true;
         _respawnSpot = new Vector3(0f, 100f, 0f);
@@ -23,7 +26,7 @@ public class Health : MonoBehaviour
 
     private void Update()
     {
-        if(GameManager.GAME_STATE == GameStates.PREGAME)
+        if(GameManager.GAME_STATE == GameStates.PREGAME && GameManager._instance != null)
         {
             maxHealth = GameManager._instance.MaxHealth > 0 ? GameManager._instance.MaxHealth : maxHealth;
             respawnTime = GameManager._instance.RespawnTime > 0 ? GameManager._instance.RespawnTime : respawnTime;

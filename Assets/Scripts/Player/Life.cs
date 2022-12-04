@@ -12,13 +12,16 @@ public class Life : MonoBehaviour
 
     void Awake()
     {
-        maxLifes = GameManager._instance.MaxLifes > 0 ? GameManager._instance.MaxLifes : maxLifes;
+        if (GameManager._instance != null)
+        {
+            maxLifes = GameManager._instance.MaxLifes > 0 ? GameManager._instance.MaxLifes : maxLifes;
+        }
         currentLifes = maxLifes;
         Alive = true;
     }
     private void Update()
     {
-        if (GameManager.GAME_STATE == GameStates.PREGAME)
+        if (GameManager.GAME_STATE == GameStates.PREGAME && GameManager._instance != null)
         {
             maxLifes = GameManager._instance.MaxLifes > 0 ? GameManager._instance.MaxLifes : maxLifes;
         }
