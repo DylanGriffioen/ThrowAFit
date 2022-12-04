@@ -24,6 +24,10 @@ public class GameManager : MonoBehaviour
     public float RespawnTime { get { return respawnTime; } set { respawnTime = value; } }
 
     [Range(0.1f, 10f)]
+    [SerializeField] float damageMultiplier = 1;
+    public float DamageMultiplier { get { return damageMultiplier; } set { damageMultiplier = value; } }
+
+    [Range(0.1f, 10f)]
     [SerializeField] float impactForceMultiplier = 1;
     public float ImpactForceMultiplier { get { return impactForceMultiplier; } set { impactForceMultiplier = value; } }
 
@@ -68,7 +72,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        if(PlayerCount > 0)
+        if(PlayerCount > 0) //TODO: Should be > 1
         {
             GAME_STATE = GameStates.GAME;
             DontDestroyPlayersOnLoad();
@@ -78,6 +82,10 @@ public class GameManager : MonoBehaviour
             //Swap scene
             //Spawn players to random locations
             SceneManager.LoadScene("Game Scene");
+        }
+        else
+        {
+            Debug.Log("Error, not enough players to start game!");
         }
 
     }
