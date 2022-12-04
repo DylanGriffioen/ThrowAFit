@@ -15,7 +15,7 @@ public class GroundCheck : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
     private void OnTriggerStay(Collider other)

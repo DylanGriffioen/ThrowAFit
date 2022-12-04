@@ -36,6 +36,6 @@ public class MainMenu : MonoBehaviour
         audioSource.clip = Click;
         audioSource.Play();
         yield return new WaitUntil(() => audioSource.isPlaying == false);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene("PregameScene");
     }
 }
