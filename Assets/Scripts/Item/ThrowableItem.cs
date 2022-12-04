@@ -6,6 +6,11 @@ public class ThrowableItem : MonoBehaviour
 {
     
     public float forwardForce = 20f, angle = 15f, knockback = 2f;
+    [SerializeField] float forceMultiplier = 1f;
+
+    [SerializeField] float onHitDamage = 100f;
+    [SerializeField] float damageMultiplier = 1f;
+
     public bool destroyOnImpact = false;
     [System.NonSerialized] public Transform thrower = null;
 
@@ -16,15 +21,25 @@ public class ThrowableItem : MonoBehaviour
 
     void Start()
     {
+        forceMultiplier = GameManager._instance.ForceMultiplier > 0 ? GameManager._instance.ForceMultiplier : forceMultiplier;
+        damageMultiplier = GameManager._instance.DamageMultiplier > 0 ? GameManager._instance.DamageMultiplier : damageMultiplier;
         coll = GetComponent<Collider>();
         upForce = forwardForce*Mathf.Tan(angle * Mathf.Deg2Rad);
+    }
+    private void Update()
+    {
+        if (GameManager.GAME_STATE == GameStates.PREGAME)
+        {
+            forceMultiplier = GameManager._instance.ForceMultiplier > 0 ? GameManager._instance.ForceMultiplier : forceMultiplier;
+            damageMultiplier = GameManager._instance.DamageMultiplier > 0 ? GameManager._instance.DamageMultiplier : damageMultiplier;
+        }
     }
     public void ThrowItem()
     {
         isThrown = true;
         rb = GetComponent<Rigidbody>();
         Physics.IgnoreCollision(thrower.GetComponent<Collider>(), coll, true);
-        rb.AddForce(Mathf.Sqrt(rb.mass)*(transform.forward * forwardForce + Vector3.up * upForce), ForceMode.Impulse);
+        rb.AddForce(Mathf.Sqrt(rb.mass)*(transform.forward * forwardForce * forceMultiplier + Vector3.up * upForce), ForceMode.Impulse);
     }
 
     void OnCollisionEnter(Collision collision)
@@ -38,7 +53,7 @@ public class ThrowableItem : MonoBehaviour
 
             if (playerHealth != null)
             {
-                playerHealth.Damage(100f);
+                playerHealth.Damage(onHitDamage*damageMultiplier);
             }
         }
         isThrown = false;

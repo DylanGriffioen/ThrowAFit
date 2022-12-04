@@ -9,14 +9,25 @@ public class Health : MonoBehaviour
     [SerializeField] float respawnTime = 5f;
     [SerializeField] bool alive;
     [SerializeField] Life lifes;
-    [SerializeField] Vector3 respawnSpot;
+    private Vector3 _respawnSpot;
 
     // Start is called before the first frame update
     void Awake()
     {
+        maxHealth = GameManager._instance.MaxHealth > 0 ? GameManager._instance.MaxHealth : maxHealth;
+        respawnTime = GameManager._instance.RespawnTime > 0 ? GameManager._instance.RespawnTime : respawnTime;
         currentHealth = maxHealth;
         alive = true;
-        respawnSpot = new Vector3(0f, 100f, 0f);
+        _respawnSpot = new Vector3(0f, 100f, 0f);
+    }
+
+    private void Update()
+    {
+        if(GameManager.GAME_STATE == GameStates.PREGAME)
+        {
+            maxHealth = GameManager._instance.MaxHealth > 0 ? GameManager._instance.MaxHealth : maxHealth;
+            respawnTime = GameManager._instance.RespawnTime > 0 ? GameManager._instance.RespawnTime : respawnTime;
+        }
     }
 
     public void Heal(float amount)
@@ -54,7 +65,7 @@ public class Health : MonoBehaviour
             lifes.Lose(3);
             //Animation?
             PlayerComponents(false);
-            gameObject.transform.position = respawnSpot;
+            gameObject.transform.position = _respawnSpot;
             if (lifes.Alive)
             {
                 StartCoroutine("Respawn");

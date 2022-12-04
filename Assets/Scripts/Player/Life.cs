@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 
 public class Life : MonoBehaviour
 {
-    GameManager _gameManager;
 
     [SerializeField] int maxLifes = 3;
     [SerializeField] int currentLifes;
@@ -13,18 +12,17 @@ public class Life : MonoBehaviour
 
     void Awake()
     {
+        maxLifes = GameManager._instance.MaxLifes > 0 ? GameManager._instance.MaxLifes : maxLifes;
         currentLifes = maxLifes;
         Alive = true;
-
-        GameObject go = GameObject.Find("GameManager");
-        if(go != null)
-        {
-            _gameManager = go.GetComponent<GameManager>();
-        }
-        if (_gameManager == null)
-            Debug.Log("Game Manager not found!");
     }
-
+    private void Update()
+    {
+        if (GameManager.GAME_STATE == GameStates.PREGAME)
+        {
+            maxLifes = GameManager._instance.MaxLifes > 0 ? GameManager._instance.MaxLifes : maxLifes;
+        }
+    }
     public void Gain(int amount)
     {
         if (Alive)

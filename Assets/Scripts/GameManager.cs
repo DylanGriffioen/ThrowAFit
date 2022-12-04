@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] float maxHealth = 100f;
     public float MaxHealth { get { return maxHealth; } set { maxHealth = value; } }
 
-    [Range(1f, 10f)]
+    [Range(0.5f, 10f)]
     [SerializeField] float respawnTime = 3f;
     public float RespawnTime { get { return respawnTime; } set { respawnTime = value; } }
 
@@ -30,8 +30,12 @@ public class GameManager : MonoBehaviour
     public float DamageMultiplier { get { return damageMultiplier; } set { damageMultiplier = value; } }
 
     [Range(0.1f, 10f)]
-    [SerializeField] float impactForceMultiplier = 1;
-    public float ImpactForceMultiplier { get { return impactForceMultiplier; } set { impactForceMultiplier = value; } }
+    [SerializeField] float forceMultiplier = 1;
+    public float ForceMultiplier { get { return forceMultiplier; } set { forceMultiplier = value; } }
+
+    [Range(1, 100)]
+    [SerializeField] int maxItemAmount = 10;
+    public int MaxItemAmount { get { return maxItemAmount; } set { maxItemAmount = value; } }
 
 
     public int PlayerCount { get; set; }   

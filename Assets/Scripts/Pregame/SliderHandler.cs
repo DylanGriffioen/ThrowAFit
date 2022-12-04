@@ -23,6 +23,9 @@ public class SliderHandler : MonoBehaviour
     [SerializeField] Slider _forceSlider;
     [SerializeField] TextMeshProUGUI _forceText;
 
+    [SerializeField] Slider _itemSlider;
+    [SerializeField] TextMeshProUGUI _itemText;
+
     private void Awake()
     {
         Init();
@@ -35,15 +38,16 @@ public class SliderHandler : MonoBehaviour
         Respawn();
         Damage();
         Force();
+        Item();
     }
 
     private void Init()
     {
         _lifeText.text = gameManager.MaxLifes.ToString();
         _healthText.text = gameManager.MaxHealth.ToString("0.00");
-        _respawnText.text = gameManager.RespawnTime.ToString();
+        _respawnText.text = gameManager.RespawnTime.ToString("0.00");
         _damageText.text = gameManager.DamageMultiplier.ToString("0.00");
-        _forceText.text = gameManager.ImpactForceMultiplier.ToString("0.00");
+        _forceText.text = gameManager.ForceMultiplier.ToString("0.00");
     }
 
     private void Life()
@@ -68,8 +72,8 @@ public class SliderHandler : MonoBehaviour
     {
         _respawnSlider.onValueChanged.AddListener((v) =>
         {
-            gameManager.RespawnTime = (int)v;
-            _respawnText.text = v.ToString();
+            gameManager.RespawnTime = v;
+            _respawnText.text = v.ToString("0.00");
         });
     }
 
@@ -86,8 +90,16 @@ public class SliderHandler : MonoBehaviour
     {
         _forceSlider.onValueChanged.AddListener((v) =>
         {
-            gameManager.ImpactForceMultiplier = v;
+            gameManager.ForceMultiplier = v;
             _forceText.text = v.ToString("0.00");
+        });
+    }
+    private void Item()
+    {
+        _itemSlider.onValueChanged.AddListener((v) =>
+        {
+            gameManager.MaxItemAmount = (int) v;
+            _itemText.text = v.ToString();
         });
     }
 }
