@@ -33,6 +33,13 @@ public class ThrowableItem : MonoBehaviour
         if (collision.rigidbody != null)
         {
             collision.rigidbody.AddForce(rb.velocity * rb.mass * knockback, ForceMode.Impulse);
+
+            Health playerHealth = collision.gameObject.GetComponent<Health>();
+
+            if (playerHealth != null)
+            {
+                playerHealth.Damage(100f);
+            }
         }
         isThrown = false;
         Physics.IgnoreCollision(thrower.GetComponent<Collider>(), coll, false);
