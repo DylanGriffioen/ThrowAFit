@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager _instance;
+
     public static GameStates GAME_STATE = GameStates.MAIN_MENU;
 
     [SerializeField] GameObject playerManager;
@@ -32,7 +34,7 @@ public class GameManager : MonoBehaviour
     public float ImpactForceMultiplier { get { return impactForceMultiplier; } set { impactForceMultiplier = value; } }
 
 
-    public int PlayerCount { get; private set; }
+    public int PlayerCount { get; set; }   
     [SerializeField] public GameObject[] _players;
 
 
@@ -41,8 +43,7 @@ public class GameManager : MonoBehaviour
         GAME_STATE = GameStates.PREGAME;
         _players = new GameObject[8];
 
-        DontDestroyOnLoad(gameObject);
-        DontDestroyOnLoad(playerManager);
+        MakeSingleton();
     }
 
     // Start is called before the first frame update
@@ -55,6 +56,18 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         Debug.Log($"Player count: {PlayerCount}");
+    }
+    private void MakeSingleton()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (_instance != null)
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void PlayerJoined()
@@ -96,10 +109,18 @@ public class GameManager : MonoBehaviour
         //UI -> RESUME | MAIN MENU | OPTIONS | QUIT GAME
     }
 
+    public bool LastPlayerStanding()
+    {
+        return PlayerCount < 2;
+    }
+
     public void GameOver()
     {
         GAME_STATE = GameStates.GAME_OVER;
+        Debug.Log("Game Over!");
         // UI -> MAIN MENU | QUIT
+
+        //coroutine (5 sec) -> Destroy everything -> Swap to main Menu
     }
 
     public void LoadMainMenu()
@@ -129,5 +150,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void PlayerLost(GameObject player)
+    {
+        Debug.Log($"Player: {player} died!");
+        for (int i = 0; i < _players.Length; i++)
+        {
+            if (_players[i].Equals(player))
+            {
+                _players[i] = null;
+            }
+        }
+        PlayerCount--;
 
+        if (LastPlayerStanding())
+        {
+            GameOver();
+        }
+    }
 }

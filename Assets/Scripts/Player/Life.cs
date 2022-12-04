@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class Life : MonoBehaviour
 {
+    GameManager _gameManager;
+
     [SerializeField] int maxLifes = 3;
     [SerializeField] int currentLifes;
     public bool Alive { get; private set; }
@@ -13,6 +15,14 @@ public class Life : MonoBehaviour
     {
         currentLifes = maxLifes;
         Alive = true;
+
+        GameObject go = GameObject.Find("GameManager");
+        if(go != null)
+        {
+            _gameManager = go.GetComponent<GameManager>();
+        }
+        if (_gameManager == null)
+            Debug.Log("Game Manager not found!");
     }
 
     public void Gain(int amount)
@@ -38,13 +48,13 @@ public class Life : MonoBehaviour
 
     public void Kill()
     {
+        GameManager._instance.PlayerLost(gameObject);
         Alive = false;
         OnDead();
     }
 
     private void OnDead()
     {
-        Debug.Log($"Player {gameObject.name} died!");
         // TODO: remove player..
         //gameObject.SetActive(false); //Player input manager gives index out of bounds error..
         //Destroy(gameObject); //Player input manager gives index out of bounds error..

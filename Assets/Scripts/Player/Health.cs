@@ -51,7 +51,7 @@ public class Health : MonoBehaviour
     {
         if(lifes != null)
         {
-            lifes.Lose(1);
+            lifes.Lose(3);
             //Animation?
             PlayerComponents(false);
             gameObject.transform.position = respawnSpot;
