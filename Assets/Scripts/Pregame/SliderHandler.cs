@@ -44,10 +44,22 @@ public class SliderHandler : MonoBehaviour
     private void Init()
     {
         _lifeText.text = gameManager.MaxLifes.ToString();
+        _lifeSlider.value = gameManager.MaxLifes;
+
         _healthText.text = gameManager.MaxHealth.ToString("0.00");
+        _healthSlider.value = gameManager.MaxHealth;
+
         _respawnText.text = gameManager.RespawnTime.ToString("0.00");
+        _respawnSlider.value = gameManager.RespawnTime;
+
         _damageText.text = gameManager.DamageMultiplier.ToString("0.00");
+        _damageSlider.value = gameManager.DamageMultiplier;
+
         _forceText.text = gameManager.ForceMultiplier.ToString("0.00");
+        _forceSlider.value = gameManager.ForceMultiplier;
+
+        _itemText.text = gameManager.MaxItemAmount.ToString();
+        _itemSlider.value = gameManager.MaxItemAmount;
     }
 
     private void Life()
