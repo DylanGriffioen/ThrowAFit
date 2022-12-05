@@ -34,10 +34,7 @@ public class CameraMovement : MonoBehaviour
             return;
         }
         Vector3 CenterPoint = GetCenterPoint();
-        if (CenterPoint.y > 10f && CenterPoint.y < 15f)
-        {
-            NewPosition = CenterPoint + offset;
-        }
+        NewPosition = CenterPoint + offset;
         transform.position = Vector3.SmoothDamp(transform.position, NewPosition, ref velocity, smoothTime);
         for (int i = 0; i < targets.Count; i++)
         {
@@ -78,7 +75,10 @@ public class CameraMovement : MonoBehaviour
         var bounds = new Bounds(targets[0].position, Vector3.zero);
         for (int i = 0; i < targets.Count; i++)
         {
-            bounds.Encapsulate(targets[i].position);
+            if (targets[i].position.y > 10f && targets[i].position.y < 20f)
+            {
+                bounds.Encapsulate(targets[i].position);
+            }
         }
         return bounds.center;
     }
