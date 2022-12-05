@@ -1197,6 +1197,8 @@ GameObject:
   - component: {fileID: 1115933391316079780}
   - component: {fileID: 1933329991003171645}
   - component: {fileID: 7408622296358188392}
+  - component: {fileID: 9079079687053978050}
+  - component: {fileID: 2681886870537829298}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -1433,6 +1435,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9f83d30c125f1d49bd48e2f4ee89ff1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &9079079687053978050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5774686695662505663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 897fc28493003724382f671d67e90990, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 0
+  respawnTime: 3
+  alive: 0
+  lifes: {fileID: 2681886870537829298}
+  respawnSpot: {x: 0, y: 0, z: 0}
+--- !u!114 &2681886870537829298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5774686695662505663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61a135acf4074ae428ed130ff01fe115, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxLifes: 3
+  currentLifes: 0
 --- !u!1 &5789769208709025391
 GameObject:
   m_ObjectHideFlags: 0
