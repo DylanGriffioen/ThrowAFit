@@ -29,6 +29,7 @@ public class Health : MonoBehaviour
         if(GameManager.GAME_STATE == GameStates.PREGAME && GameManager._instance != null)
         {
             maxHealth = GameManager._instance.MaxHealth > 0 ? GameManager._instance.MaxHealth : maxHealth;
+            currentHealth = maxHealth;
             respawnTime = GameManager._instance.RespawnTime > 0 ? GameManager._instance.RespawnTime : respawnTime;
         }
     }

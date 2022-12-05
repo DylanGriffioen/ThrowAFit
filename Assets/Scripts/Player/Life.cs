@@ -16,6 +16,10 @@ public class Life : MonoBehaviour
         {
             maxLifes = GameManager._instance.MaxLifes > 0 ? GameManager._instance.MaxLifes : maxLifes;
         }
+        else
+        {
+            Debug.Log("1");
+        }
         currentLifes = maxLifes;
         Alive = true;
     }
@@ -24,6 +28,7 @@ public class Life : MonoBehaviour
         if (GameManager.GAME_STATE == GameStates.PREGAME && GameManager._instance != null)
         {
             maxLifes = GameManager._instance.MaxLifes > 0 ? GameManager._instance.MaxLifes : maxLifes;
+            currentLifes = maxLifes;
         }
     }
     public void Gain(int amount)
