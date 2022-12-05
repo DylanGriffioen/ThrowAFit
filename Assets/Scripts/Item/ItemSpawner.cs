@@ -6,7 +6,6 @@ public class ItemSpawner : MonoBehaviour
 {
     [SerializeField] float spawnInterval = 5f;
     [SerializeField] float nextSpawn;
-    [SerializeField] int totalMaxItems = 100;
     [SerializeField] int currentMaxItems = 5;
     [SerializeField] GameObject[] itemList;
 
@@ -21,17 +20,28 @@ public class ItemSpawner : MonoBehaviour
      // Start is called before the first frame update
     void Start()
     {
+        if (GameManager._instance != null)
+        {
+            currentMaxItems = GameManager._instance.MaxItemAmount > 0 ? GameManager._instance.MaxItemAmount : currentMaxItems;
+            spawnInterval = GameManager._instance.ItemSpawnInterval > 0 ? GameManager._instance.ItemSpawnInterval : spawnInterval;
+        }
         nextSpawn = spawnInterval;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.GAME_STATE == GameStates.PREGAME && GameManager._instance != null)
+        {
+            currentMaxItems = GameManager._instance.MaxItemAmount > 0 ? GameManager._instance.MaxItemAmount : currentMaxItems;
+            spawnInterval = GameManager._instance.ItemSpawnInterval > 0 ? GameManager._instance.ItemSpawnInterval : spawnInterval;
+        }
+
         if (spawnInterval > 0)
         {
             nextSpawn -= Time.deltaTime;
 
-            if (nextSpawn < 0) // and currentItem.size < currentMaxItems
+            if (nextSpawn < 0 && currentItems.Count < currentMaxItems)
             {
                 GameObject item = RandomItem();
                 Vector3 pos = RandomLocation(spawnArea);
@@ -65,8 +75,8 @@ public class ItemSpawner : MonoBehaviour
         float y = height + spawnArea.transform.position.y + dropHeight;
         float z = Random.Range(-width / 2, width / 2) + spawnArea.transform.position.z;
 
-        Debug.Log($"ori: {origin}, length: {length}, width: {width}, height: {height}");
-        Debug.Log($"x: {x}, z: {z}, y: {y}");
+        //Debug.Log($"ori: {origin}, length: {length}, width: {width}, height: {height}");
+        //Debug.Log($"x: {x}, z: {z}, y: {y}");
 
         return new Vector3(x, y, z);
     }
@@ -75,7 +85,7 @@ public class ItemSpawner : MonoBehaviour
     {
         GameObject go = GameObject.Instantiate(item);
         spawnedItems.Add(go);
-        currentItems.Add(item);
+        currentItems.Add(go);
         go.transform.position = pos;
     }
 
@@ -86,6 +96,10 @@ public class ItemSpawner : MonoBehaviour
 
     public void RemoveItem(GameObject go)
     {
-        currentItems.Remove(go);
+        if (currentItems.Contains(go))
+        {
+            currentItems.Remove(go);
+            Destroy(go);
+        }
     }
 }

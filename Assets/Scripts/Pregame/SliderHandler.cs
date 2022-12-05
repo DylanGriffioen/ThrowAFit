@@ -26,6 +26,9 @@ public class SliderHandler : MonoBehaviour
     [SerializeField] Slider _itemSlider;
     [SerializeField] TextMeshProUGUI _itemText;
 
+    [SerializeField] Slider _spawnSlider;
+    [SerializeField] TextMeshProUGUI _spawnText;
+
     private void Awake()
     {
         Init();
@@ -39,6 +42,7 @@ public class SliderHandler : MonoBehaviour
         Damage();
         Force();
         Item();
+        Spawn();
     }
 
     private void Init()
@@ -60,6 +64,9 @@ public class SliderHandler : MonoBehaviour
 
         _itemText.text = gameManager.MaxItemAmount.ToString();
         _itemSlider.value = gameManager.MaxItemAmount;
+
+        _spawnText.text = gameManager.ItemSpawnInterval.ToString("0.00");
+        _spawnSlider.value = gameManager.ItemSpawnInterval;
     }
 
     private void Life()
@@ -112,6 +119,14 @@ public class SliderHandler : MonoBehaviour
         {
             gameManager.MaxItemAmount = (int) v;
             _itemText.text = v.ToString();
+        });
+    }
+    private void Spawn()
+    {
+        _spawnSlider.onValueChanged.AddListener((v) =>
+        {
+            gameManager.ItemSpawnInterval = v;
+            _spawnText.text = v.ToString("0.00");
         });
     }
 }
