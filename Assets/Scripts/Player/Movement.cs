@@ -218,6 +218,15 @@ public class Movement : MonoBehaviour
             //beanCollider.center = new Vector3(0, 0, 0);
         }
     }
+    public void OnPause(InputAction.CallbackContext ctx)
+    {
+        Debug.Log("Pause button pressed!");
+        if (GameManager._instance != null)
+        {
+            GameManager._instance.Pause();
+        }
+    }
+
     public void ObjectHitPlayer()
     {
         print("Hit");

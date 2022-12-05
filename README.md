@@ -44,11 +44,13 @@
 	
 * Collider
 * Rigidbody
-*	Mass -> To whatever you like
-*	Angular Drag -> 0.1
+
+* Mass -> To whatever you like
+	* Angular Drag -> 0.1
+
 * ThrowableItem (script)
-*	Forward Force -> To whatever you like
-*	Angle -> To whatever you like
-*	Knockback -> To whatever you like
-*	OnHitDamage ->  To whatever you like
+	* Forward Force -> To whatever you like
+	* Angle -> To whatever you like
+	* Knockback -> To whatever you like
+	* OnHitDamage ->  To whatever you like
 	

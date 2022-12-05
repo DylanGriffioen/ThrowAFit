@@ -44,8 +44,6 @@ public class GameManager : MonoBehaviour
     public int PlayerCount { get; set; }   
     [SerializeField] public GameObject[] _players;
 
-    public bool GameIsPaused { get; set; }
-
 
     private bool _playersSet = false;
 
@@ -126,16 +124,21 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void Pause() 
+    public void Pause()
     {
-        if (!GameIsPaused)
+        if (GameManager.GAME_STATE != GameStates.GAME)
+            return;
+
+        if (GameManager.GAME_STATE != GameStates.PAUSE)
         {
+            Debug.Log("Game paused!");
             Time.timeScale = 0;
             GAME_STATE = GameStates.PAUSE;
             //DISPLAY UI -> RESUME | MAIN MENU | OPTIONS | QUIT GAME
         }
         else
         {
+            Debug.Log("Game unpaused!");
             Time.timeScale = 1;
             GAME_STATE = GameStates.GAME;
             //HIDE UI -> RESUME | MAIN MENU | OPTIONS | QUIT GAME
