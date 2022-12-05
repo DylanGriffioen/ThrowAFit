@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class ThrowableItem : MonoBehaviour
 {
-    
     public float forwardForce = 20f, angle = 15f, knockback = 2f;
+    static float hitImpulseAngle = 45f;
     public bool destroyOnImpact = false;
     [System.NonSerialized] public Transform thrower = null;
 
@@ -32,7 +32,21 @@ public class ThrowableItem : MonoBehaviour
         if (!isThrown) { return; }
         if (collision.rigidbody != null)
         {
-            collision.rigidbody.AddForce(rb.velocity * rb.mass * knockback, ForceMode.Impulse);
+            var collRB = collision.rigidbody;
+            var collGO = collision.gameObject;
+            if (collGO.CompareTag("Player"))
+            {
+                var movementScript = collGO.GetComponent<Movement>();
+                movementScript.ObjectHitPlayer();
+            }
+            var impulseVelocityXZ = new Vector2(rb.velocity.x, rb.velocity.z) * rb.mass * knockback;
+            var impulseVelocityY = impulseVelocityXZ.magnitude * Mathf.Tan(hitImpulseAngle * Mathf.Deg2Rad);
+            print(impulseVelocityXZ);
+            print(impulseVelocityY);
+            var impulseVelocity = new Vector3(impulseVelocityXZ.x, impulseVelocityY, impulseVelocityXZ.y);
+            collRB.velocity = new Vector3(collRB.velocity.x, 0f, collRB.velocity.z);
+            collRB.AddForce(impulseVelocity, ForceMode.Impulse);
+            
         }
         isThrown = false;
         Physics.IgnoreCollision(thrower.GetComponent<Collider>(), coll, false);
@@ -40,5 +54,6 @@ public class ThrowableItem : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class ItemInteraction : MonoBehaviour
 {
+    public float throwEndLag;
     Movement movementScript;
     Transform itemSlot;
     GameObject heldObject = null;
@@ -12,6 +13,7 @@ public class ItemInteraction : MonoBehaviour
     float mass, drag, angularDrag;
     Animator animator;
     bool throwNextFrame;
+    bool pickupDropEnabled = true;
     void Awake()
     {
         itemSlot = transform.parent.GetChild(2);
@@ -20,7 +22,7 @@ public class ItemInteraction : MonoBehaviour
     }
     public void OnPickupDrop(InputAction.CallbackContext ctx)
     {
-        if (!ctx.performed) { return; }
+        if (!pickupDropEnabled || !ctx.performed) { return; }
 
         //Pickup
         if (itemSlot.childCount == 0 && objectsInLootArea.Count != 0)
@@ -81,8 +83,10 @@ public class ItemInteraction : MonoBehaviour
     public void OnThrow(InputAction.CallbackContext ctx)
     {
         if (itemSlot.childCount == 0 || heldObject == null || !ctx.performed) { return; }
-        movementScript.Throw();
+        movementScript.Throw(throwEndLag);
+        Invoke("EndThrow", throwEndLag);
         throwNextFrame = true;
+        pickupDropEnabled = false;
     }
     void Update()
     {
@@ -113,6 +117,10 @@ public class ItemInteraction : MonoBehaviour
         animator.SetBool("Carrying", false);
         animator.SetBool("Throwing", true);
         animator.SetTrigger("Throw");
+    }
+    void EndThrow()
+    {
+        pickupDropEnabled = true;
     }
     private void OnTriggerEnter(Collider other)
     {

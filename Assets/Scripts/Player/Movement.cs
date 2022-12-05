@@ -5,20 +5,23 @@ using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
-    public float baseMoveSpeed, jumpHeight, throwMoveImpulse, throwEndLag, smoothTurnTime;
+    [Min(0.01f)] public float baseMoveSpeed, baseJumpHeigh, throwMoveImpulse, smoothTurnTime, crouchHeightMult, crouchWidthMult;
 
     Rigidbody rb;
     Transform model;
     Animator animator;
     Transform itemSlot;
+    Collider coll;
+    Collider[] ragdollParts;
+    Avatar avatar;
 
-    Vector3 origScale, origLocalPos;
+    Vector3 origScale, origLocalPos, itemSlotOrigScale;
     Vector2 inputDir, moveDir;
-    bool crouching, movePressed, moving, movingLastFrame, jumping, falling, jumpingLeftGround, throwing;
+    bool crouching, movePressed, moving, movingLastFrame, jumping, falling, jumpingLeftGround, ragdollSwitch;
     bool movementEnabled = true;
-    [System.NonSerialized] public bool holdingItem, onGround;
+    [System.NonSerialized] public bool holdingItem, onGround, ragdolling;
     [System.NonSerialized] public float heldItemMass = 1f;
-    float targetAngle, smoothAngle, smoothTurnVelocity, moveSpeed, moveSpeedMult, jumpSpeed, jumpHeightMult, jumpPercent, speedMultLastFrame, gravity;
+    float targetAngle, smoothAngle, smoothTurnVelocity, moveSpeed, moveSpeedMult, jumpSpeed, jumpHeightMult, jumpPercent, speedMultLastFrame, gravity, mass;
     
 
     void Start()
@@ -28,11 +31,19 @@ public class Movement : MonoBehaviour
 
         model = transform.GetChild(0);
         itemSlot = transform.GetChild(2);
-        origScale = model.localScale;
+        origScale = transform.localScale;
+        itemSlotOrigScale = itemSlot.localScale;
         origLocalPos = model.localPosition;
         animator = model.GetComponent<Animator>();
-    }
+        avatar = animator.avatar;
 
+        coll = GetComponent<CapsuleCollider>();
+        ragdollParts = model.GetChild(0).GetComponentsInChildren<Collider>();
+        foreach (Collider c in ragdollParts)
+        {
+            Physics.IgnoreCollision(coll, c);
+        }
+    }
     void Update()
     {
         Initial();
@@ -61,11 +72,17 @@ public class Movement : MonoBehaviour
             if (falling && onGround)
             {
                 falling = false;
+                animator.ResetTrigger("Fall");
             }
         }
         jumpHeightMult = 1f;
-        if (holdingItem && heldItemMass > 1f) { jumpHeightMult /= heldItemMass; } //If holding item, divide jump speed multiplier by mass of held item
-        
+        if (holdingItem && heldItemMass >= 2f) { jumpHeightMult /= heldItemMass/2f; } //If holding item, divide jump speed multiplier by mass of held item
+
+        //Ragdoll
+        //if (ragdolling && rb.velocity.magnitude < 0.1f && !ragdollSwitch)
+        //{
+        //    TurnOffRagdoll();
+        //}
     }
     void ItemSlotMove()
     {
@@ -82,13 +99,21 @@ public class Movement : MonoBehaviour
     }
     void Directional()
     {
-        if (!moving) { return; }
+        if (!moving) 
+        {
+            if (!ragdolling)
+            {
+                rb.velocity = new Vector3(0, rb.velocity.y, 0);
+            }
+            return; 
+        }
 
         //Directional movement
         moveSpeedMult = crouching ? 0.5f : 1f; //If crouching, halve moveSpeed.
-        if (holdingItem && heldItemMass > 1f) { moveSpeedMult /= heldItemMass; } //If holding item, divide moveSpeed by mass of held item
+        if (holdingItem && heldItemMass >= 2f) { moveSpeedMult /= heldItemMass/2f; } //If holding item, divide moveSpeed by mass of held item
+        moveSpeedMult *= inputDir.magnitude;
         moveSpeed = baseMoveSpeed * moveSpeedMult;
-        moveDir = inputDir * moveSpeed; //inputDir is the normalized direction, moveDir includes moveSpeed
+        moveDir = inputDir.normalized * moveSpeed; //inputDir is the normalized direction, moveDir includes moveSpeed
         if (moveSpeedMult != speedMultLastFrame)
         {
             animator.SetFloat("Speed Multiplier", moveSpeedMult);
@@ -103,33 +128,30 @@ public class Movement : MonoBehaviour
     }
     public void OnMove(InputAction.CallbackContext ctx)
     {
-        inputDir = ctx.ReadValue<Vector2>();
-        if (ctx.started || ctx.canceled)
-        {
-            movePressed = ctx.started;
+        var value = ctx.ReadValue<Vector2>();
+        if (value == Vector2.zero) 
+        { 
+            movePressed = false;  
+            return; 
         }
-        if (ctx.canceled)
-        {
-            rb.velocity = new Vector3(0, rb.velocity.y, 0);
-        }
+        movePressed = true;
+        inputDir = value;
     }
-
     public void OnJump(InputAction.CallbackContext ctx)
     {
-        if (!onGround) { return; }
+        if (!onGround || !ctx.performed || !movementEnabled) { return; }
         jumping = true;
         jumpPercent = 0f;
-        jumpSpeed = Mathf.Sqrt(2f * (gravity/rb.mass) * jumpHeight*jumpHeightMult);
+        jumpSpeed = Mathf.Sqrt(2f * gravity * baseJumpHeigh*jumpHeightMult);
         rb.velocity = new Vector3(rb.velocity.x, jumpSpeed, rb.velocity.z); //Change upward velocity
 
         animator.SetBool("Jumping", true);
         animator.SetTrigger("Jump");
     }
-
     void Jumping()
     {
         if (!jumping) { return; }
-        if (rb.velocity.y > 0f)
+        if (rb.velocity.y > 0f && jumpPercent <= 0.93f)
         {
             jumpPercent = Mathf.InverseLerp(jumpSpeed, 0f, rb.velocity.y);
         }
@@ -138,9 +160,9 @@ public class Movement : MonoBehaviour
             falling = true;
             animator.SetTrigger("Fall");
         }
-        if (jumpPercent > 0.98f)
+        if (jumpPercent > 0.93f)
         {
-            jumpPercent = 1f;
+            jumpPercent = Mathf.Lerp(jumpPercent, 1f, 0.2f);
         }
         if (!onGround && !jumpingLeftGround)
         {
@@ -155,9 +177,8 @@ public class Movement : MonoBehaviour
         }
         animator.SetFloat("Jump Percent", jumpPercent);
     }
-    public void Throw()
+    public void Throw(float throwEndLag)
     {
-        throwing = true;
         moving = false;
         movementEnabled = false;
         Invoke("EndThrow", throwEndLag);
@@ -166,12 +187,11 @@ public class Movement : MonoBehaviour
         {
             var inputDir3 = new Vector3(inputDir.x, 0, inputDir.y);
             rb.velocity = Vector3.zero;
-            rb.AddForce((moving?inputDir3:transform.forward)*throwMoveImpulse, ForceMode.Impulse);
+            rb.AddForce((moving?inputDir3:transform.forward)*throwMoveImpulse, ForceMode.VelocityChange);
         }
     }
     void EndThrow()
     {
-        throwing = false;
         movementEnabled = true;
         animator.SetBool("Throwing", false);
     }
@@ -181,7 +201,8 @@ public class Movement : MonoBehaviour
         if (ctx.performed)
         {
             crouching = true;
-            model.localScale = new Vector3(origScale.x * 1.2f, origScale.y * 0.5f, origScale.z * 1.2f);
+            transform.localScale = new Vector3(origScale.x * crouchWidthMult, origScale.y * crouchHeightMult, origScale.z * crouchWidthMult);
+            itemSlot.localScale = new Vector3(itemSlotOrigScale.x / crouchWidthMult, itemSlotOrigScale.y / crouchHeightMult, itemSlotOrigScale.z / crouchWidthMult);
             //model.localPosition = new Vector3(0, -0.5f, 0);
             //beanCollider.height = 1f;
             //beanCollider.center = new Vector3(0, -0.5f, 0);
@@ -190,10 +211,65 @@ public class Movement : MonoBehaviour
         else if (ctx.canceled)
         {
             crouching = false;
-            model.localScale = origScale;
+            transform.localScale = origScale;
+            itemSlot.localScale = itemSlotOrigScale;
             //model.localPosition = Vector3.zero;
             //beanCollider.height = 2f;
             //beanCollider.center = new Vector3(0, 0, 0);
+        }
+    }
+    public void ObjectHitPlayer()
+    {
+        print("Hit");
+        //TurnOnRagdoll();
+        //Invoke("TurnOffRagdoll", 1f);
+    }  
+    void TurnOnRagdoll()
+    {
+        coll.enabled = false;
+        print("Here!");
+        rb.useGravity = false;
+        print(rb.useGravity);
+        rb.velocity = Vector3.zero;
+        ragdolling = true;
+        animator.enabled = false;
+        animator.avatar = null;
+        movementEnabled = false;
+
+        foreach (Collider c in ragdollParts)
+        {
+            c.isTrigger = false;
+            c.attachedRigidbody.velocity = Vector3.zero;
+        }
+    }
+    void TurnOffRagdoll()
+    {
+        coll.enabled = true;
+        rb.useGravity = true;
+        rb.velocity = Vector3.zero;
+        ragdolling = false;
+        animator.enabled = true;
+        animator.avatar = avatar;
+        movementEnabled = true;
+
+        foreach (Collider c in ragdollParts)
+        {
+            c.isTrigger = true;
+            c.attachedRigidbody.velocity = Vector3.zero;
+        }
+    }
+    public void OnRagdoll(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed) { return; }
+        ragdollSwitch = !ragdollSwitch;
+        if (ragdollSwitch)
+        {
+            rb.AddForce(Vector3.up * 10f, ForceMode.VelocityChange);
+            Invoke("TurnOnRagdoll", 0.2f);
+        }
+        else
+        {
+            TurnOffRagdoll();
         }
     }
 }
