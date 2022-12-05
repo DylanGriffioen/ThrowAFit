@@ -44,6 +44,11 @@ public class GameManager : MonoBehaviour
     public int PlayerCount { get; set; }   
     [SerializeField] public GameObject[] _players;
 
+    public bool GameIsPaused { get; set; }
+
+
+    private bool _playersSet = false;
+
     private void Awake()
     {
         GAME_STATE = GameStates.PREGAME;
@@ -91,7 +96,7 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        if(PlayerCount > 0) //TODO: Should be > 1
+        if(PlayerCount > 0) //TODO: Should be > 1 
         {
             GAME_STATE = GameStates.GAME;
             DontDestroyPlayersOnLoad();
@@ -101,6 +106,18 @@ public class GameManager : MonoBehaviour
             //Swap scene
             //Spawn players to random locations
             SceneManager.LoadScene("Game Scene");
+            if (!_playersSet)
+            {
+                GameObject spawnArea = GameObject.Find("ThrowAFitBuilding");
+                float dropHeight = 2f;
+                float distanceToEdge = 1f;
+                //give player random location
+                foreach(GameObject player in _players)
+                {
+                    player.transform.position = RandomLocation.GetRandomLocationOnObject(spawnArea, distanceToEdge, dropHeight);
+                }
+                _playersSet = true;
+            }
         }
         else
         {
@@ -111,9 +128,20 @@ public class GameManager : MonoBehaviour
 
     public void Pause() 
     {
-        GAME_STATE = GameStates.PAUSE;
-        //UI -> RESUME | MAIN MENU | OPTIONS | QUIT GAME
+        if (!GameIsPaused)
+        {
+            Time.timeScale = 0;
+            GAME_STATE = GameStates.PAUSE;
+            //DISPLAY UI -> RESUME | MAIN MENU | OPTIONS | QUIT GAME
+        }
+        else
+        {
+            Time.timeScale = 1;
+            GAME_STATE = GameStates.GAME;
+            //HIDE UI -> RESUME | MAIN MENU | OPTIONS | QUIT GAME
+        }
     }
+
 
     public bool LastPlayerStanding()
     {
@@ -133,8 +161,9 @@ public class GameManager : MonoBehaviour
     {
         GAME_STATE = GameStates.MAIN_MENU;
 
-        Destroy(gameObject);
         Destroy(playerManager);
+        DestroyPlayers();
+        Destroy(gameObject);
 
         SceneManager.LoadScene("MenuScene");
     }

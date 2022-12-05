@@ -7,6 +7,7 @@ public class ItemSpawner : MonoBehaviour
     [SerializeField] float spawnInterval = 5f;
     [SerializeField] float nextSpawn;
     [SerializeField] int currentMaxItems = 5;
+    [SerializeField] GameObject itemsParent;
     [SerializeField] GameObject[] itemList;
 
     [Header("Location")]
@@ -44,7 +45,8 @@ public class ItemSpawner : MonoBehaviour
             if (nextSpawn < 0 && currentItems.Count < currentMaxItems)
             {
                 GameObject item = RandomItem();
-                Vector3 pos = RandomLocation(spawnArea);
+                //Vector3 pos = RandomLocation(spawnArea);
+                Vector3 pos = RandomLocation.GetRandomLocationOnObject(spawnArea, dropHeight);
 
                 SpawnItem(item, pos);
                 nextSpawn = spawnInterval;
@@ -53,40 +55,14 @@ public class ItemSpawner : MonoBehaviour
 
     }
 
-
-    private Vector3 RandomLocation(GameObject spawnArea)
-    {
-        Vector3 origin = spawnArea.transform.position;
-
-        BoxCollider collider = spawnArea.GetComponent<BoxCollider>();
-
-        float length = spawnArea.transform.localScale.x;
-        float width = spawnArea.transform.localScale.z;
-        float height = spawnArea.transform.localScale.y;
-
-        if (collider != null)
-        {
-            length *= collider.size.x;
-            width *= collider.size.z;
-            height *= collider.size.y;
-        }
-
-        float x = Random.Range(-length/2, length/2) + spawnArea.transform.position.x;
-        float y = height + spawnArea.transform.position.y + dropHeight;
-        float z = Random.Range(-width / 2, width / 2) + spawnArea.transform.position.z;
-
-        //Debug.Log($"ori: {origin}, length: {length}, width: {width}, height: {height}");
-        //Debug.Log($"x: {x}, z: {z}, y: {y}");
-
-        return new Vector3(x, y, z);
-    }
-
     private void SpawnItem(GameObject item, Vector3 pos)
     {
         GameObject go = GameObject.Instantiate(item);
         spawnedItems.Add(go);
         currentItems.Add(go);
         go.transform.position = pos;
+        if(itemsParent != null)
+            go.transform.parent = itemsParent.transform;
     }
 
     private GameObject RandomItem()
