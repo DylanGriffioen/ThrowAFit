@@ -61,7 +61,6 @@ public class ThrowableItem : MonoBehaviour
                 Health playerHealth = collGO.GetComponent<Health>();
                 if (playerHealth != null)
                 {
-                    playerHealth.Damage(100f);
                     playerHealth.Damage(onHitDamage * _damageMultiplier);
                 }
             }
