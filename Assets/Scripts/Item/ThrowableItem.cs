@@ -64,7 +64,7 @@ public class ThrowableItem : MonoBehaviour
                     playerHealth.Damage(onHitDamage * _damageMultiplier);
                 }
             }
-            var impulseVelocityXZ = new Vector2(rb.velocity.x, rb.velocity.z) * rb.mass * knockback;
+            var impulseVelocityXZ = new Vector2(rb.velocity.x, rb.velocity.z) * rb.mass * knockback * _forceMultiplier;
             var impulseVelocityY = impulseVelocityXZ.magnitude * Mathf.Tan(hitImpulseAngle * Mathf.Deg2Rad);
             print(impulseVelocityXZ);
             print(impulseVelocityY);

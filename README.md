@@ -35,3 +35,20 @@
 	* Esc [Keyboard]
 	* Options [PS controller]
 	
+	
+
+## Add New item 
+
+* Tag -> Item
+* Layer -> ThrowableItem
+	
+* Collider
+* Rigidbody
+*	Mass -> To whatever you like
+*	Angular Drag -> 0.1
+* ThrowableItem (script)
+*	Forward Force -> To whatever you like
+*	Angle -> To whatever you like
+*	Knockback -> To whatever you like
+*	OnHitDamage ->  To whatever you like
+	
