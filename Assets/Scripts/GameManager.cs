@@ -37,10 +37,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] int maxItemAmount = 10;
     public int MaxItemAmount { get { return maxItemAmount; } set { maxItemAmount = value; } }
 
-
     public int PlayerCount { get; set; }   
     [SerializeField] public GameObject[] _players;
-
 
     private void Awake()
     {

@@ -6,6 +6,7 @@ public class ThrowableItem : MonoBehaviour
 {
     public float forwardForce = 20f, angle = 15f, knockback = 2f;
     static float hitImpulseAngle = 45f;
+    [SerializeField] float onHitDamage = 100f;
     public bool destroyOnImpact = false;
     [System.NonSerialized] public Transform thrower = null;
 
@@ -14,10 +15,28 @@ public class ThrowableItem : MonoBehaviour
     bool isThrown;
     float upForce;
 
+    private float _forceMultiplier = 1f;
+    private float _damageMultiplier = 1f;
+
+
     void Start()
     {
+        if(GameManager._instance != null)
+        {
+            _forceMultiplier = GameManager._instance.ForceMultiplier > 0 ? GameManager._instance.ForceMultiplier : _forceMultiplier;
+            _damageMultiplier = GameManager._instance.DamageMultiplier > 0 ? GameManager._instance.DamageMultiplier : _damageMultiplier;
+        }
         coll = GetComponent<Collider>();
         upForce = forwardForce*Mathf.Tan(angle * Mathf.Deg2Rad);
+    }
+
+    private void Update()
+    {
+        if (GameManager._instance != null && GameManager.GAME_STATE == GameStates.PREGAME)
+        {
+            _forceMultiplier = GameManager._instance.ForceMultiplier > 0 ? GameManager._instance.ForceMultiplier : _forceMultiplier;
+            _damageMultiplier = GameManager._instance.DamageMultiplier > 0 ? GameManager._instance.DamageMultiplier : _damageMultiplier;
+        }
     }
     public void ThrowItem()
     {
@@ -38,6 +57,13 @@ public class ThrowableItem : MonoBehaviour
             {
                 var movementScript = collGO.GetComponent<Movement>();
                 movementScript.ObjectHitPlayer();
+
+                Health playerHealth = collGO.GetComponent<Health>();
+                if (playerHealth != null)
+                {
+                    playerHealth.Damage(100f);
+                    playerHealth.Damage(onHitDamage * _damageMultiplier);
+                }
             }
             var impulseVelocityXZ = new Vector2(rb.velocity.x, rb.velocity.z) * rb.mass * knockback;
             var impulseVelocityY = impulseVelocityXZ.magnitude * Mathf.Tan(hitImpulseAngle * Mathf.Deg2Rad);
