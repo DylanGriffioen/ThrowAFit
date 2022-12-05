@@ -25,14 +25,14 @@ public class Respawn : MonoBehaviour
 
     public void RespawnPlayer()
     {
-        transform.position = origPos;
         rb = GetComponent<Rigidbody>();
         rb.velocity = Vector3.zero;
+        transform.position = origPos;
     }
     public void RespawnPlayer(Vector3 pos)
     {
-        transform.position = pos;
         rb = GetComponent<Rigidbody>();
         rb.velocity = Vector3.zero;
+        transform.position = pos;
     }
 }

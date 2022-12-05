@@ -415,8 +415,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forwardForce: 20
-  upForce: 4
+  angle: 15
   knockback: 2
+  onHitDamage: 100
   destroyOnImpact: 0
 --- !u!54 &507060554
 Rigidbody:
@@ -944,8 +945,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forwardForce: 20
-  upForce: 4
+  angle: 15
   knockback: 2
+  onHitDamage: 100
   destroyOnImpact: 0
 --- !u!114 &1258449736
 MonoBehaviour:
@@ -1248,8 +1250,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forwardForce: 20
-  upForce: 4
+  angle: 15
   knockback: 2
+  onHitDamage: 100
   destroyOnImpact: 0
 --- !u!114 &2107219689
 MonoBehaviour:

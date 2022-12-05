@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
     public float ItemSpawnInterval { get { return itemSpawnInterval; } set { itemSpawnInterval = value; } }
 
     public int PlayerCount { get; set; }   
-    [SerializeField] public GameObject[] _players;
+    [SerializeField] GameObject[] _players;
 
 
     private bool _playersSet = false;
@@ -108,11 +108,14 @@ public class GameManager : MonoBehaviour
             {
                 GameObject spawnArea = GameObject.Find("ThrowAFitBuilding");
                 float dropHeight = 2f;
-                float distanceToEdge = 1f;
-                //give player random location
-                foreach(GameObject player in _players)
+                float distanceToEdge = 2f;
+
+                //give player random location and move to parent "Players"
+                foreach (GameObject player in _players)
                 {
-                    player.transform.position = RandomLocation.GetRandomLocationOnObject(spawnArea, distanceToEdge, dropHeight);
+                    if(spawnArea != null)
+                        player.transform.position = RandomLocation.GetRandomLocationOnObject(spawnArea, distanceToEdge, dropHeight);
+
                 }
                 _playersSet = true;
             }
@@ -153,22 +156,33 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        GAME_STATE = GameStates.GAME_OVER;
-        Debug.Log("Game Over!");
-        // UI -> MAIN MENU | QUIT
+        if(GAME_STATE == GameStates.GAME)
+        {
+            GAME_STATE = GameStates.GAME_OVER;
+            Debug.Log("Game Over!");
 
-        //coroutine (5 sec) -> Destroy everything -> Swap to main Menu
+            GameObject gameOverScreen = GameObject.Find("Canvas").transform.GetChild(1).gameObject;
+            Debug.Log(gameOverScreen);
+            if (gameOverScreen != null)
+                gameOverScreen.SetActive(true);
+            else
+                Debug.Log("not found!");
+
+            StartCoroutine(BackToMainMenu());
+            // UI -> MAIN MENU | QUIT
+        }
+
     }
 
     public void LoadMainMenu()
     {
         GAME_STATE = GameStates.MAIN_MENU;
 
-        Destroy(playerManager);
         DestroyPlayers();
+        Destroy(playerManager);
         Destroy(gameObject);
-
-        SceneManager.LoadScene("MenuScene");
+        //SceneManager.LoadScene("MenuScene");
+        SceneManager.LoadScene("MenuScene_SebastianTest");
     }
 
 
@@ -182,9 +196,9 @@ public class GameManager : MonoBehaviour
 
     private void DestroyPlayers()
     {
-        foreach (GameObject go in _players)
+        foreach(GameObject player in _players)
         {
-            Destroy(go);
+            Destroy(player);
         }
     }
 
@@ -193,10 +207,11 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Player: {player} died!");
         for (int i = 0; i < _players.Length; i++)
         {
+            /*
             if (_players[i].Equals(player))
             {
                 _players[i] = null;
-            }
+            }*/
         }
         PlayerCount--;
 
@@ -204,5 +219,11 @@ public class GameManager : MonoBehaviour
         {
             GameOver();
         }
+    }
+
+    IEnumerator BackToMainMenu()
+    {
+        yield return new WaitForSeconds(3f);
+        LoadMainMenu();
     }
 }

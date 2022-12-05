@@ -65,7 +65,7 @@ public class Health : MonoBehaviour
     {
         if(lifes != null)
         {
-            lifes.Lose(1);
+            lifes.Lose(3);
             //Animation?
             PlayerComponents(false);
             gameObject.transform.position = _respawnSpot;
@@ -85,7 +85,18 @@ public class Health : MonoBehaviour
         if(playerRespawner != null)
         {
             PlayerComponents(true);
-            playerRespawner.RespawnPlayer();
+            GameObject spawnArea = GameObject.Find("ThrowAFitBuilding");
+            float dropHeight = 2f;
+            float distanceToEdge = 2f;
+            //give player random location
+            if(spawnArea != null)
+            {
+                playerRespawner.RespawnPlayer(RandomLocation.GetRandomLocationOnObject(spawnArea, distanceToEdge, dropHeight));
+            }
+            else
+            {
+                playerRespawner.RespawnPlayer();
+            }
         }
     }
 
