@@ -1452,7 +1452,6 @@ MonoBehaviour:
   respawnTime: 3
   alive: 0
   lifes: {fileID: 2681886870537829298}
-  respawnSpot: {x: 0, y: 0, z: 0}
 --- !u!114 &2681886870537829298
 MonoBehaviour:
   m_ObjectHideFlags: 0
