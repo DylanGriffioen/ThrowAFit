@@ -25,5 +25,12 @@ public class ItemDestoysOnCollision : MonoBehaviour
                 itemSpawner.RemoveItem(item);
             }
         }
+        else
+        {
+            if (collision.gameObject.tag == "Item")
+            {
+                Destroy(collision.gameObject);
+            }
+        }
     }
 }
