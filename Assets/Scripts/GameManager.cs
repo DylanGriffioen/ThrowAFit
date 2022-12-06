@@ -47,24 +47,38 @@ public class GameManager : MonoBehaviour
 
     private bool _playersSet = false;
 
+    private GameObject buttonStart;
+
     private void Awake()
     {
         GAME_STATE = GameStates.PREGAME;
         _players = new GameObject[8];
-
+        
         MakeSingleton();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-
+        buttonStart = GameObject.Find("Start Game");
     }
 
     // Update is called once per frame
     void Update()
     {
         Debug.Log($"Player count: {PlayerCount}");
+        if (GAME_STATE == GameStates.PREGAME)
+        {
+            if (PlayerCount < 1)
+            {
+                buttonStart.SetActive(false);
+            }
+            else
+            {
+                buttonStart.SetActive(true);
+            }
+        }
+        
     }
     private void MakeSingleton()
     {
@@ -96,6 +110,7 @@ public class GameManager : MonoBehaviour
     {
         if(PlayerCount > 0) //TODO: Should be > 1 
         {
+            
             GAME_STATE = GameStates.GAME;
             DontDestroyPlayersOnLoad();
             PlayerInputManager pim = playerManager.GetComponent<PlayerInputManager>();
@@ -226,4 +241,6 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
         LoadMainMenu();
     }
+
+    
 }
