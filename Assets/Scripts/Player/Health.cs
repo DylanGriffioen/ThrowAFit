@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
+    [SerializeField] float hitForceMultipler = 1f;
+
     [SerializeField] float maxHealth = 100f;
     [SerializeField] float currentHealth;
     [SerializeField] float respawnTime = 5f;
@@ -23,6 +25,7 @@ public class Health : MonoBehaviour
         alive = true;
         _respawnSpot = new Vector3(0f, 100f, 0f);
     }
+    public float GetHitForceMultiplier() { return hitForceMultipler; }
 
     private void Update()
     {
@@ -46,11 +49,12 @@ public class Health : MonoBehaviour
     {
         if (alive)
         {
+            hitForceMultipler += amount * 0.01f;
             currentHealth -= amount;
 
             if (currentHealth <= 0)
             {
-                Kill();
+                //Kill();
             }
         }
     }
@@ -81,6 +85,7 @@ public class Health : MonoBehaviour
     {
         yield return new WaitForSeconds(respawnTime);
         currentHealth = maxHealth;
+        hitForceMultipler = 1.0f;
         Respawn playerRespawner = gameObject.GetComponent<Respawn>();
 
         if(playerRespawner != null)

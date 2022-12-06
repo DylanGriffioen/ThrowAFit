@@ -362,5 +362,5 @@ MonoBehaviour:
   forwardForce: 20
   angle: 15
   knockback: 3
-  onHitDamage: 75
+  onHitDamage: 100
   destroyOnImpact: 0

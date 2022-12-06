@@ -53,6 +53,8 @@ public class ThrowableItem : MonoBehaviour
         {
             var collRB = collision.rigidbody;
             var collGO = collision.gameObject;
+            var impulseVelocityXZ = new Vector2(rb.velocity.x, rb.velocity.z) * rb.mass * knockback * _forceMultiplier;
+            var impulseVelocityY = impulseVelocityXZ.magnitude * Mathf.Tan(hitImpulseAngle * Mathf.Deg2Rad);
             if (collGO.CompareTag("Player"))
             {
                 var movementScript = collGO.GetComponent<Movement>();
@@ -62,10 +64,9 @@ public class ThrowableItem : MonoBehaviour
                 if (playerHealth != null)
                 {
                     playerHealth.Damage(onHitDamage * _damageMultiplier);
+                    impulseVelocityXZ *= playerHealth.GetHitForceMultiplier();
                 }
             }
-            var impulseVelocityXZ = new Vector2(rb.velocity.x, rb.velocity.z) * rb.mass * knockback * _forceMultiplier;
-            var impulseVelocityY = impulseVelocityXZ.magnitude * Mathf.Tan(hitImpulseAngle * Mathf.Deg2Rad);
             print(impulseVelocityXZ);
             print(impulseVelocityY);
             var impulseVelocity = new Vector3(impulseVelocityXZ.x, impulseVelocityY, impulseVelocityXZ.y);
