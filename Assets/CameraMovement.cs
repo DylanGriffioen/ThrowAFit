@@ -34,7 +34,14 @@ public class CameraMovement : MonoBehaviour
             return;
         }
         Vector3 CenterPoint = GetCenterPoint();
-        NewPosition = CenterPoint + offset;
+        if (NewPosition.y <= 30f)
+        {
+            NewPosition = CenterPoint + offset;
+        }
+        if (NewPosition.y > 30f)
+        {
+            NewPosition = new Vector3(0, 20f, -20f);
+        }
         transform.position = Vector3.SmoothDamp(transform.position, NewPosition, ref velocity, smoothTime);
         for (int i = 0; i < targets.Count; i++)
         {
