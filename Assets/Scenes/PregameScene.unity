@@ -1185,7 +1185,7 @@ MonoBehaviour:
   itemList:
   - {fileID: 2245821910359963266, guid: 2e774074145db0b4d9847eed6931ad92, type: 3}
   - {fileID: 5607941510581913197, guid: 9de08621b4cdc1044ae2e89bdf849993, type: 3}
-  - {fileID: 6136125461762869207, guid: 08c86c5c5e3c65c4684470b2504b7fc2, type: 3}
+  - {fileID: 8834786699387347812, guid: 4e87b4726d4058b4c8ca4331bf5e08fc, type: 3}
   spawnArea: {fileID: 788817900}
   dropHeight: 5
   spawnedItems: []
