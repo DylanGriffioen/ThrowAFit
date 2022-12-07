@@ -12,12 +12,12 @@ public class PlayerManagerSingleton : MonoBehaviour
     }
     private void MakeSingleton()
     {
-        if (_instance == null)
+        if (PlayerManagerSingleton._instance == null)
         {
             _instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else if (_instance != null)
+        else if (PlayerManagerSingleton._instance != null)
         {
             Destroy(gameObject);
         }
