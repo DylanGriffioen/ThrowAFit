@@ -7,6 +7,7 @@ public class MainMenu : MonoBehaviour
 {
     // Start is called before the first frame update
 
+    [SerializeField] Animator animator;
     private AudioClip Click;
     private AudioSource audioSource;
     private void Start()
@@ -34,8 +35,12 @@ public class MainMenu : MonoBehaviour
     IEnumerator PlaySound()
     {
         audioSource.clip = Click;
-        audioSource.Play();
-        yield return new WaitUntil(() => audioSource.isPlaying == false);
+        float fadeOutTime = 1f;
+        animator.SetTrigger("FadeOut");
+        
+        yield return new WaitForSeconds(fadeOutTime);
+        //yield return new WaitUntil(() => audioSource.isPlaying == false);
         SceneManager.LoadScene("PregameScene");
     }
+
 }

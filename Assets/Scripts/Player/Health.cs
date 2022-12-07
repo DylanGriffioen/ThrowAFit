@@ -71,7 +71,6 @@ public class Health : MonoBehaviour
         if(lifes != null)
         {
             lifes.Lose(1);
-            //Animation?
             PlayerComponents(false);
             gameObject.transform.position = _respawnSpot;
             if (lifes.Alive)
@@ -93,7 +92,7 @@ public class Health : MonoBehaviour
             PlayerComponents(true);
             GameObject spawnArea = GameObject.Find("ThrowAFitBuilding");
             float dropHeight = 2f;
-            float distanceToEdge = 2f;
+            float distanceToEdge = 4f;
             //give player random location
             if(spawnArea != null)
             {

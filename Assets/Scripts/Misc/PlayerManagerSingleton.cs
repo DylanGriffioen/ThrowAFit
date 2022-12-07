@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerManagerDontDestroy : MonoBehaviour
+public class PlayerManagerSingleton : MonoBehaviour
 {
-    public static PlayerManagerDontDestroy _instance;
+    public static PlayerManagerSingleton _instance;
 
     void Awake()
     {

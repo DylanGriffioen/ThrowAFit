@@ -38,7 +38,7 @@ public class ItemSpawner : MonoBehaviour
             spawnInterval = GameManager._instance.ItemSpawnInterval > 0 ? GameManager._instance.ItemSpawnInterval : spawnInterval;
         }
 
-        if (spawnInterval > 0)
+        if (spawnInterval > 0 && GameManager.GAME_STATE != GameStates.COUNTDOWN)
         {
             nextSpawn -= Time.deltaTime;
 

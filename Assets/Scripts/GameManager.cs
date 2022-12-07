@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     public static GameStates GAME_STATE = GameStates.MAIN_MENU;
 
     [SerializeField] GameObject playerManager;
+    [SerializeField] GameObject gameCanvas;
+    [SerializeField] Animator gameCanvasAnimator;
+    [SerializeField] Animator preGameCanvasAnimator;
 
     [Header("Game settings")]
     [Range(1, 10)]
@@ -69,7 +72,7 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Player count: {PlayerCount}");
         if (GAME_STATE == GameStates.PREGAME)
         {
-            if (PlayerCount < 1)
+            if (PlayerCount < 1) //TODO: Should be < 2
             {
                 buttonStart.SetActive(false);
             }
@@ -108,16 +111,13 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        if(PlayerCount > 0) //TODO: Should be > 1 
+        StartCoroutine(FadeOutToPrepare());
+        /*if(PlayerCount > 0) //TODO: Should be > 1 
         {
-            
-            GAME_STATE = GameStates.GAME;
             DontDestroyPlayersOnLoad();
             PlayerInputManager pim = playerManager.GetComponent<PlayerInputManager>();
             pim.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
 
-            //Swap scene
-            //Spawn players to random locations
             SceneManager.LoadScene("Game Scene");
             if (!_playersSet)
             {
@@ -133,13 +133,55 @@ public class GameManager : MonoBehaviour
 
                 }
                 _playersSet = true;
+                GAME_STATE = GameStates.GAME;
+                StartCoroutine(HandleCountDown());
+            }
+        }
+        else
+        {
+            Debug.Log("Error, not enough players to start game!");
+        }*/
+    }
+    IEnumerator FadeOutToPrepare()
+    {
+        float fadeOutTime = 1f;
+        preGameCanvasAnimator.SetTrigger("FadeOut");
+
+        yield return new WaitForSeconds(fadeOutTime);
+        PrepareGame();
+    }
+
+    private void PrepareGame()
+    {
+        if (PlayerCount > 0) //TODO: Should be > 1 
+        {
+            DontDestroyPlayersOnLoad();
+            PlayerInputManager pim = playerManager.GetComponent<PlayerInputManager>();
+            pim.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
+
+            SceneManager.LoadScene("Game Scene");
+            if (!_playersSet)
+            {
+                GameObject spawnArea = GameObject.Find("ThrowAFitBuilding");
+                float dropHeight = 2f;
+                float distanceToEdge = 2f;
+
+                //give player random location and move to parent "Players"
+                foreach (GameObject player in _players)
+                {
+                    if (spawnArea != null)
+                        player.transform.position = RandomLocation.GetRandomLocationOnObject(spawnArea, distanceToEdge, dropHeight);
+
+                }
+                _playersSet = true;
+                GAME_STATE = GameStates.GAME;
+                StartCoroutine(HandleCountDown());
             }
         }
         else
         {
             Debug.Log("Error, not enough players to start game!");
         }
-
     }
 
     public void Pause()
@@ -147,11 +189,16 @@ public class GameManager : MonoBehaviour
         if (GameManager.GAME_STATE != GameStates.GAME)
             return;
 
+        GameObject pauseScreen = gameCanvas.transform.GetChild(0).gameObject;
+        if (pauseScreen != null)
+            return;
+
         if (GameManager.GAME_STATE != GameStates.PAUSE)
         {
             Debug.Log("Game paused!");
             Time.timeScale = 0;
             GAME_STATE = GameStates.PAUSE;
+            pauseScreen.SetActive(true);
             //DISPLAY UI -> RESUME | MAIN MENU | OPTIONS | QUIT GAME
         }
         else
@@ -159,10 +206,10 @@ public class GameManager : MonoBehaviour
             Debug.Log("Game unpaused!");
             Time.timeScale = 1;
             GAME_STATE = GameStates.GAME;
+            pauseScreen.SetActive(false);
             //HIDE UI -> RESUME | MAIN MENU | OPTIONS | QUIT GAME
         }
     }
-
 
     public bool LastPlayerStanding()
     {
@@ -176,15 +223,13 @@ public class GameManager : MonoBehaviour
             GAME_STATE = GameStates.GAME_OVER;
             Debug.Log("Game Over!");
 
-            GameObject gameOverScreen = GameObject.Find("Canvas").transform.GetChild(1).gameObject;
-            Debug.Log(gameOverScreen);
+            /*GameObject gameOverScreen = gameCanvas.transform.GetChild(1).gameObject;
             if (gameOverScreen != null)
                 gameOverScreen.SetActive(true);
             else
-                Debug.Log("not found!");
+                Debug.Log("GameOverScreen not found!");*/
 
             StartCoroutine(BackToMainMenu());
-            // UI -> MAIN MENU | QUIT
         }
 
     }
@@ -220,14 +265,13 @@ public class GameManager : MonoBehaviour
     public void PlayerLost(GameObject player)
     {
         Debug.Log($"Player: {player} died!");
-        for (int i = 0; i < _players.Length; i++)
+        /*for (int i = 0; i < _players.Length; i++)
         {
-            /*
             if (_players[i].Equals(player))
             {
                 _players[i] = null;
-            }*/
-        }
+            }
+        }*/
         PlayerCount--;
 
         if (LastPlayerStanding())
@@ -238,9 +282,65 @@ public class GameManager : MonoBehaviour
 
     IEnumerator BackToMainMenu()
     {
-        yield return new WaitForSeconds(3f);
+        GameObject gameOverScreen = gameCanvas.transform.GetChild(1).gameObject;
+        if (gameOverScreen == null)
+        {
+            LoadMainMenu();
+            yield break;
+        }
+
+        gameOverScreen.SetActive(true);
+        gameCanvasAnimator.SetTrigger("GameOver");
+        
+        float animationTime = 4.3f;
+        
+        yield return new WaitForSeconds(animationTime);
         LoadMainMenu();
     }
 
+
+    IEnumerator HandleCountDown()
+    {
+        GAME_STATE = GameStates.COUNTDOWN;
+        GameObject countDownScreen = gameCanvas.transform.GetChild(2).gameObject;
+        if (countDownScreen == null)
+            yield break;
+
+        float animationTime = 3.4f;
+
+        FreezePlayer(true);
+        countDownScreen.SetActive(true);
+        gameCanvasAnimator.SetTrigger("CountDown");
+
+        yield return new WaitForSeconds(animationTime);
+
+
+        if (countDownScreen != null)
+            countDownScreen.SetActive(false);
+
+        FreezePlayer(false);
+        GAME_STATE = GameStates.GAME;
+    }
+
+
+    private void FreezePlayer(bool freeze)
+    {
+        foreach(GameObject player in _players)
+        {
+            Rigidbody rb = player.GetComponent<Rigidbody>();
+            if(rb != null)
+            {
+                if (freeze)
+                {
+                    rb.constraints = RigidbodyConstraints.FreezeAll;
+                }
+                else
+                {
+                    rb.constraints = RigidbodyConstraints.None;
+                    rb.constraints = RigidbodyConstraints.FreezeRotation;
+                }
+            }
+        }
+    }
     
 }
