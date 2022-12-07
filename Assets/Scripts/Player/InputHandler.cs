@@ -71,9 +71,11 @@ public class InputHandler : MonoBehaviour
     {
         if (!ctx.performed)
             return;
+        string[] punchAnimations = { "Punch", "Punch2" };
+
 
         Debug.Log("Punch!");
-        playerAnimator.SetTrigger("Punch");
+        playerAnimator.SetTrigger(punchAnimations[Random.Range(0, punchAnimations.Length)]);
         StartCoroutine(FinishHit(punchAnimationTime, punchDamage, punchForce));
     }
 
