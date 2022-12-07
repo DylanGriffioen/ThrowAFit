@@ -221,8 +221,8 @@ public class Movement : MonoBehaviour
     public void ObjectHitPlayer()
     {
         print("Hit");
-        //TurnOnRagdoll();
-        //Invoke("TurnOffRagdoll", 1f);
+        TurnOnRagdoll();
+        Invoke("TurnOffRagdoll", 1f);
     }  
     void TurnOnRagdoll()
     {
@@ -239,7 +239,9 @@ public class Movement : MonoBehaviour
         foreach (Collider c in ragdollParts)
         {
             c.isTrigger = false;
-            c.attachedRigidbody.velocity = Vector3.zero;
+            var cRB = c.attachedRigidbody;
+            cRB.velocity = Vector3.zero;
+            cRB.useGravity = true;
         }
     }
     void TurnOffRagdoll()
@@ -255,7 +257,9 @@ public class Movement : MonoBehaviour
         foreach (Collider c in ragdollParts)
         {
             c.isTrigger = true;
-            c.attachedRigidbody.velocity = Vector3.zero;
+            var cRB = c.attachedRigidbody;
+            cRB.velocity = Vector3.zero;
+            cRB.useGravity = false;
         }
     }
     public void OnRagdoll(InputAction.CallbackContext ctx)
