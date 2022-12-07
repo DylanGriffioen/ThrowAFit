@@ -66,6 +66,7 @@ public class InputHandler : MonoBehaviour
             pauseScreen.SetActive(false);
         }
     }
+
     public void OnPunch(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed)
@@ -73,7 +74,6 @@ public class InputHandler : MonoBehaviour
 
         Debug.Log("Punch!");
         playerAnimator.SetTrigger("Punch");
-
         StartCoroutine(FinishHit(punchAnimationTime, punchDamage, punchForce));
     }
 
@@ -90,7 +90,6 @@ public class InputHandler : MonoBehaviour
 
     IEnumerator FinishHit(float animationTime, float damage, float force)
     {
-
         yield return new WaitForSeconds(animationTime);
 
         List<GameObject> objectsInFront = new List<GameObject>();

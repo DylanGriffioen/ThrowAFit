@@ -83,8 +83,8 @@ public class GameManager : MonoBehaviour
                 buttonStart.SetActive(true);
             }
         }
-        
     }
+
     private void MakeSingleton()
     {
         if (_instance == null)
@@ -108,7 +108,6 @@ public class GameManager : MonoBehaviour
     {
         PlayerCount--;
         _players = GameObject.FindGameObjectsWithTag("Player");
-
     }
 
     public void StartGame()
