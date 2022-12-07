@@ -19,12 +19,16 @@ public class CameraMovement : MonoBehaviour
 
     void Start()
     {
+        cam = GetComponent<Camera>();
+        FindPlayers();
+    }
+    public void FindPlayers()
+    {
         players = GameObject.FindGameObjectsWithTag("Player");
         for (int i = 0; i < players.Length; i++)
         {
             targets.Add(players[i].transform);
         }
-        cam = GetComponent<Camera>();
     }
 
     void LateUpdate()

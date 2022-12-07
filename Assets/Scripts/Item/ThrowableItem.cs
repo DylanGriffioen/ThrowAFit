@@ -49,7 +49,7 @@ public class ThrowableItem : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         if (!isThrown) { return; }
-        if (collision.rigidbody != null)
+        if (collision.rigidbody != null && !collision.gameObject.CompareTag("Ragdoll"))
         {
             var collRB = collision.rigidbody;
             var collGO = collision.gameObject;

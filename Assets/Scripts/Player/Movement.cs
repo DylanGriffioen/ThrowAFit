@@ -6,29 +6,32 @@ using UnityEngine.InputSystem;
 public class Movement : MonoBehaviour
 {
     [Min(0.01f)] public float baseMoveSpeed, baseJumpHeigh, throwMoveImpulse, smoothTurnTime, crouchHeightMult, crouchWidthMult;
+    public GameObject ragdoll;
 
     Rigidbody rb;
     Transform model;
     Animator animator;
     Transform itemSlot;
     Collider coll;
-    Collider[] ragdollParts;
     Avatar avatar;
+    GameObject newRagdoll;
+    SkinnedMeshRenderer render;
+    Color color;
+    Follow followScript;
+
 
     Vector3 origScale, origLocalPos, itemSlotOrigScale;
     Vector2 inputDir, moveDir;
-    bool crouching, movePressed, moving, movingLastFrame, jumping, falling, jumpingLeftGround, ragdollSwitch;
-    bool movementEnabled = true;
+    bool crouching, movePressed, moving, movingLastFrame, jumping, falling, jumpingLeftGround, ragdollSwitch, movementEnabled = true;
     [System.NonSerialized] public bool holdingItem, onGround, ragdolling;
     [System.NonSerialized] public float heldItemMass = 1f;
     float targetAngle, smoothAngle, smoothTurnVelocity, moveSpeed, moveSpeedMult, jumpSpeed, jumpHeightMult, jumpPercent, speedMultLastFrame, gravity, mass;
     
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
         gravity = Physics.gravity.magnitude;
-
         model = transform.GetChild(0);
         itemSlot = transform.GetChild(2);
         origScale = transform.localScale;
@@ -36,13 +39,10 @@ public class Movement : MonoBehaviour
         origLocalPos = model.localPosition;
         animator = model.GetComponent<Animator>();
         avatar = animator.avatar;
-
+        render = GetComponentInChildren<SkinnedMeshRenderer>();
+        color = render.material.color;
         coll = GetComponent<CapsuleCollider>();
-        ragdollParts = model.GetChild(0).GetComponentsInChildren<Collider>();
-        foreach (Collider c in ragdollParts)
-        {
-            Physics.IgnoreCollision(coll, c);
-        }
+        followScript = GetComponent<Follow>();
     }
     void Update()
     {
@@ -77,12 +77,6 @@ public class Movement : MonoBehaviour
         }
         jumpHeightMult = 1f;
         if (holdingItem && heldItemMass >= 2f) { jumpHeightMult /= heldItemMass/2f; } //If holding item, divide jump speed multiplier by mass of held item
-
-        //Ragdoll
-        //if (ragdolling && rb.velocity.magnitude < 0.1f && !ragdollSwitch)
-        //{
-        //    TurnOffRagdoll();
-        //}
     }
     void ItemSlotMove()
     {
@@ -101,10 +95,6 @@ public class Movement : MonoBehaviour
     {
         if (!moving) 
         {
-            if (!ragdolling)
-            {
-                rb.velocity = new Vector3(0, rb.velocity.y, 0);
-            }
             return; 
         }
 
@@ -221,55 +211,47 @@ public class Movement : MonoBehaviour
     public void ObjectHitPlayer()
     {
         print("Hit");
-        TurnOnRagdoll();
-        Invoke("TurnOffRagdoll", 1f);
+        Invoke("TurnOnRagdoll", 0.02f);
     }  
     void TurnOnRagdoll()
     {
-        coll.enabled = false;
-        print("Here!");
-        rb.useGravity = false;
-        print(rb.useGravity);
-        rb.velocity = Vector3.zero;
+        if (ragdolling) { return; }
+        print("Ragdoll On");
         ragdolling = true;
-        animator.enabled = false;
-        animator.avatar = null;
+        render.enabled = false;
+        rb.useGravity = false;
+        var velocity = rb.velocity;
+        rb.velocity = Vector3.zero;
+        coll.enabled = false;
         movementEnabled = false;
 
-        foreach (Collider c in ragdollParts)
-        {
-            c.isTrigger = false;
-            var cRB = c.attachedRigidbody;
-            cRB.velocity = Vector3.zero;
-            cRB.useGravity = true;
-        }
+        newRagdoll = Instantiate(ragdoll, transform.position, transform.rotation);
+        var behavior = newRagdoll.transform.GetChild(0).GetComponent<RagdollBehavior>();
+        behavior.velocity = velocity;
+        behavior.movementScript = GetComponent<Movement>();
+        behavior.color = color;
+        followScript.enabled = true;
+        followScript.target = newRagdoll.transform.GetChild(0).GetChild(0);
     }
-    void TurnOffRagdoll()
+    public void TurnOffRagdoll()
     {
-        coll.enabled = true;
-        rb.useGravity = true;
-        rb.velocity = Vector3.zero;
+        if (!ragdolling) { return; }
+        print("Ragdoll Off");
         ragdolling = false;
-        animator.enabled = true;
-        animator.avatar = avatar;
+        followScript.enabled = false;
+        Destroy(newRagdoll);
+        render.enabled = true;
+        rb.useGravity = true;
+        coll.enabled = true;
         movementEnabled = true;
-
-        foreach (Collider c in ragdollParts)
-        {
-            c.isTrigger = true;
-            var cRB = c.attachedRigidbody;
-            cRB.velocity = Vector3.zero;
-            cRB.useGravity = false;
-        }
     }
     public void OnRagdoll(InputAction.CallbackContext ctx)
     {
         if (!ctx.performed) { return; }
-        ragdollSwitch = !ragdollSwitch;
-        if (ragdollSwitch)
+        //ragdollSwitch = !ragdollSwitch;
+        if (!ragdolling)
         {
-            rb.AddForce(Vector3.up * 10f, ForceMode.VelocityChange);
-            Invoke("TurnOnRagdoll", 0.2f);
+            TurnOnRagdoll();
         }
         else
         {

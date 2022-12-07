@@ -6,6 +6,7 @@ public class Respawn : MonoBehaviour
 {
     Vector3 origPos;
     Rigidbody rb;
+    public const float deathAltitude = 2.5f;
     void Start()
     {
         origPos = transform.position;
@@ -13,9 +14,9 @@ public class Respawn : MonoBehaviour
 
     void Update()
     {
-        if (transform.position.y < 2.5f)
+        if (transform.position.y < deathAltitude)
         {
-            Health health = gameObject.GetComponent<Health>();
+            Health health = GetComponent<Health>();
             if(health != null)
             {
                 health.Kill();
