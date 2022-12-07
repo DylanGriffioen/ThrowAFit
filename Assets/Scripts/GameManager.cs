@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] Animator gameCanvasAnimator;
     [SerializeField] Animator preGameCanvasAnimator;
 
+    public GameObject GameCanvas { get { return gameCanvas; } }
+
     [Header("Game settings")]
     [Range(1, 10)]
     [SerializeField] int maxLifes = 3;
@@ -155,11 +157,13 @@ public class GameManager : MonoBehaviour
     {
         if (PlayerCount > 0) //TODO: Should be > 1 
         {
+            DontDestroyOnLoad(gameCanvas);
             DontDestroyPlayersOnLoad();
             PlayerInputManager pim = playerManager.GetComponent<PlayerInputManager>();
             pim.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
 
             SceneManager.LoadScene("Game Scene");
+            gameCanvas.SetActive(true);
             if (!_playersSet)
             {
                 GameObject spawnArea = GameObject.Find("ThrowAFitBuilding");
@@ -174,8 +178,6 @@ public class GameManager : MonoBehaviour
                     ItemInteraction itemInteraction = player.GetComponentInChildren<ItemInteraction>();
                     if (itemInteraction != null)
                         itemInteraction.DropDestroyItem();
-                    else
-                        Debug.Log("not found!");
                     
                     if (spawnArea != null)
                         player.transform.position = RandomLocation.GetRandomLocationOnObject(spawnArea, distanceToEdge, dropHeight);
@@ -189,33 +191,6 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.Log("Error, not enough players to start game!");
-        }
-    }
-
-    public void Pause()
-    {
-        if (GameManager.GAME_STATE != GameStates.GAME)
-            return;
-
-        GameObject pauseScreen = gameCanvas.transform.GetChild(0).gameObject;
-        if (pauseScreen != null)
-            return;
-
-        if (GameManager.GAME_STATE != GameStates.PAUSE)
-        {
-            Debug.Log("Game paused!");
-            Time.timeScale = 0;
-            GAME_STATE = GameStates.PAUSE;
-            pauseScreen.SetActive(true);
-            //DISPLAY UI -> RESUME | MAIN MENU | OPTIONS | QUIT GAME
-        }
-        else
-        {
-            Debug.Log("Game unpaused!");
-            Time.timeScale = 1;
-            GAME_STATE = GameStates.GAME;
-            pauseScreen.SetActive(false);
-            //HIDE UI -> RESUME | MAIN MENU | OPTIONS | QUIT GAME
         }
     }
 
@@ -248,6 +223,7 @@ public class GameManager : MonoBehaviour
 
         DestroyPlayers();
         Destroy(playerManager);
+        Destroy(gameCanvas);
         Destroy(gameObject);
         //SceneManager.LoadScene("MenuScene");
         SceneManager.LoadScene("MenuScene_SebastianTest");
