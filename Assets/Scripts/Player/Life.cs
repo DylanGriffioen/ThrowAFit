@@ -25,7 +25,7 @@ public class Life : MonoBehaviour
     }
     private void Update()
     {
-        if (GameManager.GAME_STATE == GameStates.PREGAME && GameManager._instance != null)
+        if (GameManager.GAME_STATE == GameStatus.PREGAME && GameManager._instance != null)
         {
             maxLifes = GameManager._instance.MaxLifes > 0 ? GameManager._instance.MaxLifes : maxLifes;
             currentLifes = maxLifes;
@@ -41,7 +41,7 @@ public class Life : MonoBehaviour
 
     public void Lose(int amount)
     {
-        if (Alive && GameManager.GAME_STATE == GameStates.GAME)
+        if (Alive && GameManager.GAME_STATE == GameStatus.GAME)
         {
             currentLifes -= amount;
 

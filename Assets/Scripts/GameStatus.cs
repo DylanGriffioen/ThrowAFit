@@ -1,4 +1,4 @@
-public enum GameStates
+public enum GameStatus
 {
     MAIN_MENU,
     PREGAME,

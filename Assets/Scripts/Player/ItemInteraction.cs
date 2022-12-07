@@ -14,7 +14,7 @@ public class ItemInteraction : MonoBehaviour
     Animator animator;
     bool throwNextFrame;
     bool pickupDropEnabled = true;
-    bool _canSteal = true;
+    bool _canSteal = false;
     void Awake()
     {
         itemSlot = transform.parent.GetChild(2);
@@ -48,7 +48,8 @@ public class ItemInteraction : MonoBehaviour
             var heldObjectTransform = heldObject.transform;
 
             GameObject parentObject = heldObjectTransform.parent == null ? null : heldObjectTransform.parent.gameObject;
-            if(parentObject == null || !parentObject.tag.Equals("Player"))
+
+            if(parentObject == null || !parentObject.tag.Equals("PlayerItem"))
             {
                 //From ground
                 heldObjectTransform.parent = itemSlot;
@@ -71,19 +72,19 @@ public class ItemInteraction : MonoBehaviour
             {
                 if (!_canSteal)
                     return;
+
                 //Steal from player
                 GameObject stolenFromPlayer = parentObject.transform.parent.gameObject;
                 if(stolenFromPlayer != null)
                 {
                     heldObjectTransform.parent = itemSlot;
                     heldObjectTransform.localPosition = new Vector3(0f, heldObjectTransform.localScale.y / 2f, 0f);
-                    heldObjectTransform.localRotation = Quaternion.identity;
-                    stolenFromPlayer.GetComponentInChildren<ItemInteraction>().LoseItem();
                     movementScript.holdingItem = true;
                     movementScript.heldItemMass = mass;
 
                     //Switch carrying bool in animator
                     animator.SetBool("Carrying", true);
+                    stolenFromPlayer.GetComponentInChildren<ItemInteraction>().LoseItem();
                 }
             }
 
@@ -127,9 +128,6 @@ public class ItemInteraction : MonoBehaviour
         if (itemSlot.childCount == 0)
         {
             movementScript.holdingItem = false;
-            Destroy(heldObject);
-
-            //Switch carrying bool in animator
             animator.SetBool("Carrying", false);
         }
     }

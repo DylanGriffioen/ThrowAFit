@@ -29,7 +29,7 @@ public class Health : MonoBehaviour
 
     private void Update()
     {
-        if(GameManager.GAME_STATE == GameStates.PREGAME && GameManager._instance != null)
+        if(GameManager.GAME_STATE == GameStatus.PREGAME && GameManager._instance != null)
         {
             maxHealth = GameManager._instance.MaxHealth > 0 ? GameManager._instance.MaxHealth : maxHealth;
             currentHealth = maxHealth;
