@@ -169,6 +169,14 @@ public class GameManager : MonoBehaviour
                 //give player random location and move to parent "Players"
                 foreach (GameObject player in _players)
                 {
+                    //remove player held item
+                    
+                    ItemInteraction itemInteraction = player.GetComponentInChildren<ItemInteraction>();
+                    if (itemInteraction != null)
+                        itemInteraction.DropDestroyItem();
+                    else
+                        Debug.Log("not found!");
+                    
                     if (spawnArea != null)
                         player.transform.position = RandomLocation.GetRandomLocationOnObject(spawnArea, distanceToEdge, dropHeight);
 

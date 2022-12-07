@@ -80,6 +80,19 @@ public class ItemInteraction : MonoBehaviour
             animator.SetBool("Carrying", false);
         }
     }
+
+    public void DropDestroyItem()
+    {
+        if(itemSlot.childCount != 0)
+        {
+            movementScript.holdingItem = false;
+            Destroy(heldObject);
+
+            //Switch carrying bool in animator
+            animator.SetBool("Carrying", false);
+        }
+    }
+
     public void OnThrow(InputAction.CallbackContext ctx)
     {
         if (itemSlot.childCount == 0 || heldObject == null || !ctx.performed) { return; }
