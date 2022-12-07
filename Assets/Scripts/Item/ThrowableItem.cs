@@ -32,7 +32,7 @@ public class ThrowableItem : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager._instance != null && GameManager.GAME_STATE == GameStates.PREGAME)
+        if (GameManager._instance != null && GameManager.GAME_STATE == GameStatus.PREGAME)
         {
             _forceMultiplier = GameManager._instance.ForceMultiplier > 0 ? GameManager._instance.ForceMultiplier : _forceMultiplier;
             _damageMultiplier = GameManager._instance.DamageMultiplier > 0 ? GameManager._instance.DamageMultiplier : _damageMultiplier;

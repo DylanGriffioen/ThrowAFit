@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager _instance;
 
-    public static GameStates GAME_STATE = GameStates.MAIN_MENU;
+    public static GameStatus GAME_STATE = GameStatus.MAIN_MENU;
 
     [SerializeField] GameObject playerManager;
     [SerializeField] GameObject gameCanvas;
@@ -56,9 +56,8 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        GAME_STATE = GameStates.PREGAME;
+        GAME_STATE = GameStatus.PREGAME;
         _players = new GameObject[8];
-        
         MakeSingleton();
     }
 
@@ -72,7 +71,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         Debug.Log($"Player count: {PlayerCount}");
-        if (GAME_STATE == GameStates.PREGAME)
+        if (GAME_STATE == GameStatus.PREGAME)
         {
             if (PlayerCount < 1) //TODO: Should be < 2
             {
@@ -81,6 +80,22 @@ public class GameManager : MonoBehaviour
             else
             {
                 buttonStart.SetActive(true);
+            }
+        }
+
+        Debug.Log("gameCanvas: " + gameCanvas);
+        if (gameCanvas == null)
+        {
+            if(GameManager.GAME_STATE == GameStatus.GAME) 
+            {
+                if(SceneManager.GetActiveScene() == SceneManager.GetSceneByBuildIndex(2))
+                {
+                    gameCanvas = GameObject.Find("Game_Canvas");
+                    if(gameCanvas != null)
+                    {
+                        gameCanvasAnimator = gameCanvas.GetComponent<Animator>();
+                    }
+                }
             }
         }
     }
@@ -113,36 +128,8 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         StartCoroutine(FadeOutToPrepare());
-        /*if(PlayerCount > 0) //TODO: Should be > 1 
-        {
-            DontDestroyPlayersOnLoad();
-            PlayerInputManager pim = playerManager.GetComponent<PlayerInputManager>();
-            pim.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
-
-            SceneManager.LoadScene("Game Scene");
-            if (!_playersSet)
-            {
-                GameObject spawnArea = GameObject.Find("ThrowAFitBuilding");
-                float dropHeight = 2f;
-                float distanceToEdge = 2f;
-
-                //give player random location and move to parent "Players"
-                foreach (GameObject player in _players)
-                {
-                    if(spawnArea != null)
-                        player.transform.position = RandomLocation.GetRandomLocationOnObject(spawnArea, distanceToEdge, dropHeight);
-
-                }
-                _playersSet = true;
-                GAME_STATE = GameStates.GAME;
-                StartCoroutine(HandleCountDown());
-            }
-        }
-        else
-        {
-            Debug.Log("Error, not enough players to start game!");
-        }*/
     }
+
     IEnumerator FadeOutToPrepare()
     {
         float fadeOutTime = 1f;
@@ -156,13 +143,11 @@ public class GameManager : MonoBehaviour
     {
         if (PlayerCount > 0) //TODO: Should be > 1 
         {
-            DontDestroyOnLoad(gameCanvas);
             DontDestroyPlayersOnLoad();
             PlayerInputManager pim = playerManager.GetComponent<PlayerInputManager>();
             pim.joinBehavior = PlayerJoinBehavior.JoinPlayersManually;
 
             SceneManager.LoadScene("Game Scene");
-            gameCanvas.SetActive(true);
             if (!_playersSet)
             {
                 GameObject spawnArea = GameObject.Find("ThrowAFitBuilding");
@@ -183,7 +168,7 @@ public class GameManager : MonoBehaviour
 
                 }
                 _playersSet = true;
-                GAME_STATE = GameStates.GAME;
+                GAME_STATE = GameStatus.GAME;
                 StartCoroutine(HandleCountDown());
             }
         }
@@ -200,9 +185,9 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        if(GAME_STATE == GameStates.GAME)
+        if(GAME_STATE == GameStatus.GAME)
         {
-            GAME_STATE = GameStates.GAME_OVER;
+            GAME_STATE = GameStatus.GAME_OVER;
             Debug.Log("Game Over!");
 
             /*GameObject gameOverScreen = gameCanvas.transform.GetChild(1).gameObject;
@@ -218,7 +203,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadMainMenu()
     {
-        GAME_STATE = GameStates.MAIN_MENU;
+        GAME_STATE = GameStatus.MAIN_MENU;
 
         DestroyPlayers();
         Destroy(playerManager);
@@ -284,8 +269,21 @@ public class GameManager : MonoBehaviour
 
     IEnumerator HandleCountDown()
     {
-        GAME_STATE = GameStates.COUNTDOWN;
+        while (SceneManager.GetActiveScene() != SceneManager.GetSceneByBuildIndex(2))
+        {
+            Debug.Log($"scene: {SceneManager.GetActiveScene()}%");
+            yield return null;
+        }
+        /*while (asyncOperation == null || !asyncOperation.isDone)
+        {
+            float p = asyncOperation == null ? -1f : asyncOperation.progress * 100;
+            Debug.Log($"async: {p}%");
+            yield return null;
+        }*/
+
+        GAME_STATE = GameStatus.COUNTDOWN;
         GameObject countDownScreen = gameCanvas.transform.GetChild(2).gameObject;
+        Debug.Log("CDS: " + countDownScreen);
         if (countDownScreen == null)
             yield break;
 
@@ -302,7 +300,7 @@ public class GameManager : MonoBehaviour
             countDownScreen.SetActive(false);
 
         FreezePlayer(false);
-        GAME_STATE = GameStates.GAME;
+        GAME_STATE = GameStatus.GAME;
     }
 
 
@@ -325,5 +323,4 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    
 }

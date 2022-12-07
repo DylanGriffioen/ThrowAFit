@@ -48,7 +48,7 @@ public class ItemInteraction : MonoBehaviour
             var heldObjectTransform = heldObject.transform;
 
             GameObject parentObject = heldObjectTransform.parent == null ? null : heldObjectTransform.parent.gameObject;
-            if(parentObject == null || !parentObject.tag.Equals("Player"))
+            if(parentObject == null || !parentObject.tag.Equals("PlayerItem"))
             {
                 //From ground
                 heldObjectTransform.parent = itemSlot;

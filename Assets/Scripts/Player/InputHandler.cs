@@ -30,7 +30,7 @@ public class InputHandler : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager._instance != null && GameManager.GAME_STATE == GameStates.PREGAME)
+        if (GameManager._instance != null && GameManager.GAME_STATE == GameStatus.PREGAME)
         {
             _forceMultiplier = GameManager._instance.ForceMultiplier > 0 ? GameManager._instance.ForceMultiplier : _forceMultiplier;
             _damageMultiplier = GameManager._instance.DamageMultiplier > 0 ? GameManager._instance.DamageMultiplier : _damageMultiplier;
@@ -44,25 +44,25 @@ public class InputHandler : MonoBehaviour
             return;
 
         Debug.Log("PAUSE!");
-        if (GameManager.GAME_STATE != GameStates.GAME)
+        if (GameManager.GAME_STATE != GameStatus.GAME)
             return;
 
         GameObject pauseScreen = GameManager._instance.GameCanvas.transform.GetChild(0).gameObject;
         if (pauseScreen != null)
             return;
 
-        if (GameManager.GAME_STATE != GameStates.PAUSE)
+        if (GameManager.GAME_STATE != GameStatus.PAUSE)
         {
             Debug.Log("Game paused!");
             Time.timeScale = 0;
-            GameManager.GAME_STATE = GameStates.PAUSE;
+            GameManager.GAME_STATE = GameStatus.PAUSE;
             pauseScreen.SetActive(true);
         }
         else
         {
             Debug.Log("Game unpaused!");
             Time.timeScale = 1;
-            GameManager.GAME_STATE = GameStates.GAME;
+            GameManager.GAME_STATE = GameStatus.GAME;
             pauseScreen.SetActive(false);
         }
     }

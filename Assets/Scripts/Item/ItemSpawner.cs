@@ -32,13 +32,13 @@ public class ItemSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.GAME_STATE == GameStates.PREGAME && GameManager._instance != null)
+        if (GameManager.GAME_STATE == GameStatus.PREGAME && GameManager._instance != null)
         {
             currentMaxItems = GameManager._instance.MaxItemAmount > 0 ? GameManager._instance.MaxItemAmount : currentMaxItems;
             spawnInterval = GameManager._instance.ItemSpawnInterval > 0 ? GameManager._instance.ItemSpawnInterval : spawnInterval;
         }
 
-        if (spawnInterval > 0 && GameManager.GAME_STATE != GameStates.COUNTDOWN)
+        if (spawnInterval > 0 && GameManager.GAME_STATE != GameStatus.COUNTDOWN)
         {
             nextSpawn -= Time.deltaTime;
 
