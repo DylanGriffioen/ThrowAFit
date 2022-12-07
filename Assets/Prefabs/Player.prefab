@@ -1480,6 +1480,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f34b058bf3de6734c8ad0e14a9f8ea15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerAnimator: {fileID: 2557210179212397296}
+  punchDamage: 15
+  punchAnimationTime: 0.5
+  punchForce: 1
+  kickDamage: 30
+  kickAnimationTime: 1
+  kickForce: 2
+  hitImpulseAngle: 15
 --- !u!1 &5789769208709025391
 GameObject:
   m_ObjectHideFlags: 0

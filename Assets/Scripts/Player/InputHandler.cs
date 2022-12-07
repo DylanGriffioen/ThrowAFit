@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class InputHandler : MonoBehaviour
 {
-    [SerializeField] Animator _playerAnimator;
+    [SerializeField] Animator playerAnimator;
 
     [SerializeField] float punchDamage = 15;
     [SerializeField] float punchAnimationTime = 0.5f;
@@ -72,7 +72,7 @@ public class InputHandler : MonoBehaviour
             return;
 
         Debug.Log("Punch!");
-        _playerAnimator.SetTrigger("Punch");
+        playerAnimator.SetTrigger("Punch");
 
         StartCoroutine(FinishHit(punchAnimationTime, punchDamage, punchForce));
     }
@@ -83,7 +83,7 @@ public class InputHandler : MonoBehaviour
             return;
 
         Debug.Log("Kick!");
-        _playerAnimator.SetTrigger("Kick");
+        playerAnimator.SetTrigger("Kick");
         StartCoroutine(FinishHit(kickAnimationTime, kickDamage, kickForce));
     }
 
