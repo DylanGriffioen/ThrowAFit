@@ -223,11 +223,9 @@ public class ItemInteraction : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         objectsInLootArea.Add(other.gameObject);
-        Debug.Log("+1: " + objectsInLootArea.ToString());
     }
     private void OnTriggerExit(Collider other)
     {
         objectsInLootArea.Remove(other.gameObject);
-        Debug.Log("-1: " + objectsInLootArea.ToString());
     }
 }

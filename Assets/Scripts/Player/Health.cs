@@ -93,6 +93,7 @@ public class Health : MonoBehaviour
             GameObject spawnArea = GameObject.Find("ThrowAFitBuilding");
             float dropHeight = 2f;
             float distanceToEdge = 4f;
+            gameObject.GetComponentInChildren<ItemInteraction>().DropDestroyItem();
             //give player random location
             if(spawnArea != null)
             {
