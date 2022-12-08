@@ -643,11 +643,11 @@ GameObject:
   - component: {fileID: 5840515852214555014}
   m_Layer: 11
   m_Name: PunchArea
-  m_TagString: Untagged
+  m_TagString: PunchArea
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5204514103822712445
 Transform:
   m_ObjectHideFlags: 0

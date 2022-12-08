@@ -9,6 +9,7 @@ TagManager:
   - Item
   - PlayerItem
   - Ragdoll
+  - PunchArea
   layers:
   - Default
   - TransparentFX
