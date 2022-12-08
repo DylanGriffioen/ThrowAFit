@@ -674,8 +674,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.5880246, y: 0.68688345, z: 0.6157134}
-  m_Center: {x: -1.8469253e-15, y: 0.2539575, z: -0.19997312}
+  m_Size: {x: 0.7043457, y: 1.2057858, z: 0.8314592}
+  m_Center: {x: -7.8057067e-16, y: -0.005493641, z: -0.09210019}
 --- !u!114 &1464139188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -689,13 +689,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   punchDamage: 15
-  punchTime: 0.25
+  punchTime: 0.2
   punchEndLag: 0.1
-  punchForce: 1
+  punchForce: 15
   kickDamage: 30
-  kickTime: 0.7
-  kickEndLag: 0.3
-  kickForce: 2
+  kickTime: 0.5
+  kickEndLag: 0.25
+  kickForce: 50
   hitImpulseAngle: 15
 --- !u!1 &4421517934095861774
 GameObject:
@@ -1135,6 +1135,7 @@ MonoBehaviour:
   smoothTurnTime: 0.07
   crouchHeightMult: 0.5
   crouchWidthMult: 1.2
+  ragdollThreshold: 3
   ragdoll: {fileID: 2372407157869887982, guid: 074747c7a806acc4abcdd067a2c7fb8a, type: 3}
 --- !u!114 &7408622296358188392
 MonoBehaviour:

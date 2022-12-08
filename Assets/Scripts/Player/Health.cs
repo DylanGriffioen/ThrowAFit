@@ -85,8 +85,8 @@ public class Health : MonoBehaviour
         yield return new WaitForSeconds(respawnTime);
         currentHealth = maxHealth;
         hitForceMultipler = 1.0f;
+        alive = true;
         Respawn playerRespawner = gameObject.GetComponent<Respawn>();
-
         if(playerRespawner != null)
         {
             PlayerComponents(true);

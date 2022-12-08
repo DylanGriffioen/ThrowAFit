@@ -11,7 +11,7 @@ public class ItemDestoysOnCollision : MonoBehaviour
     {
         if(itemSpawner == null)
         {
-            itemSpawner = GameObject.Find("ItemSpawner").GetComponent<ItemSpawner>();
+            itemSpawner = GameObject.Find("Item Spawner").GetComponent<ItemSpawner>();
         }
     }
 

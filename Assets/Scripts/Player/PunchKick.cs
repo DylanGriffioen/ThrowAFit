@@ -26,9 +26,8 @@ public class PunchKick : MonoBehaviour
 
     Movement movementScript;
 
-    bool kicking, punching, idlingEnabled, idlingEnabledLastFrame, animating, hitting;
+    bool animating, hitting;
     float animationHitTime, animationEndLag, animationTotalTime, timer, animationSplit;
-    string currentAnimationTimer;
     void Awake()
     {
         movementScript = transform.parent.GetComponent<Movement>();
@@ -44,7 +43,6 @@ public class PunchKick : MonoBehaviour
         UpdateMultipliers();
         AnimationTime();
     }
-    
     void AnimationTime()
     {
         if (animating)
@@ -79,10 +77,9 @@ public class PunchKick : MonoBehaviour
             }
         }
     }
-
     public void OnPunch(InputAction.CallbackContext ctx)
     {
-        if (!ctx.performed || hitting || movementScript.movementEnabled == false)
+        if (!ctx.performed || hitting || !movementScript.movementEnabled || movementScript.holdingItem)
             return;
         hitting = true;
         movementScript.movementEnabled = false;
@@ -93,10 +90,9 @@ public class PunchKick : MonoBehaviour
         StartCoroutine(Hit(punchTime, punchEndLag, punchDamage, punchForce));
         animator.SetBool("Idling Enabled", false);
     }
-
     public void OnKick(InputAction.CallbackContext ctx)
     {
-        if (!ctx.performed || hitting || movementScript.movementEnabled == false)
+        if (!ctx.performed || hitting || !movementScript.movementEnabled || movementScript.holdingItem)
             return;
         hitting = true;
         movementScript.movementEnabled = false;
@@ -107,6 +103,7 @@ public class PunchKick : MonoBehaviour
     }
     IEnumerator Hit(float hitTime, float endLag, float damage, float force)
     {
+        //Animate
         animating = true;
         animationHitTime = hitTime;
         animationEndLag = endLag;
@@ -121,6 +118,7 @@ public class PunchKick : MonoBehaviour
             if (objectsInHitbox[i] == null)
             {
                 objectsInHitbox.RemoveAt(i);
+                print("RemovedCuzNull");
             }
         }
 
@@ -130,7 +128,7 @@ public class PunchKick : MonoBehaviour
             
             var hitRB = obj.GetComponent<Rigidbody>();
             if (hitRB == null) { continue; }
-            Vector2 impulseVelocityXZ = transform.forward * force * _forceMultiplier;
+            Vector2 impulseVelocityXZ = new Vector2(transform.forward.x,transform.forward.z) * force * _forceMultiplier;
             float impulseVelocityY = impulseVelocityXZ.magnitude * Mathf.Tan(hitImpulseAngle * Mathf.Deg2Rad);
 
             if (obj.CompareTag("Player"))
@@ -145,85 +143,29 @@ public class PunchKick : MonoBehaviour
                     playerHealth.Damage(damage * _damageMultiplier);
                 }
             }
-            print(impulseVelocityXZ);
-            print(impulseVelocityY);
+            //print(impulseVelocityXZ);
+            //print(impulseVelocityY);
             var impulseVelocity = new Vector3(impulseVelocityXZ.x, impulseVelocityY, impulseVelocityXZ.y);
             hitRB.velocity = new Vector3(hitRB.velocity.x, 0f, hitRB.velocity.z);
             hitRB.AddForce(impulseVelocity, ForceMode.Impulse);
         }
 
         yield return new WaitForSeconds(endLag);
+
+        //End hit
         movementScript.movementEnabled = true;
         hitting = false;
         animator.SetBool("Idling Enabled", true);
     }
-    
-
-
-    /*IEnumerator FinishHit(float animationTime, float damage, float force)
-    {
-        yield return new WaitForSeconds(animationTime);
-
-        movementScript.movementEnabled = true;
-        objectsInHitbox.Clear();
-        float objectDistance;
-        if(objectsInHitbox[0] == null)
-        {
-            objectsInHitbox.Clear();
-            yield break;
-        }
-        float closestDistance = (objectsInHitbox[0].transform.position - transform.parent.position).magnitude;
-        int closestIndex = 0;
-        for (int i = 1; i < objectsInHitbox.Count; i++)
-        {
-            objectDistance = (objectsInHitbox[i].transform.position - transform.parent.position).magnitude;
-            if (objectDistance < closestDistance)
-            {
-                closestDistance = objectDistance;
-                closestIndex = i;
-            }
-        }
-
-        GameObject closestObject = objectsInHitbox[closestIndex].gameObject;
-        Debug.Log("closest Object: " + closestObject);
-
-        if (closestObject != null)
-        {
-            Rigidbody closestRB = closestObject.GetComponent<Rigidbody>();
-
-            if (closestRB != null)
-            {
-
-                Vector3 impulseVelocityXZ = transform.forward * force * _forceMultiplier;
-                float impulseVelocityY = impulseVelocityXZ.magnitude * Mathf.Tan(hitImpulseAngle * Mathf.Deg2Rad);
-
-                if (closestObject.CompareTag("Player"))
-                {
-                    var movementScript = closestObject.GetComponent<Movement>();
-                    movementScript.ObjectHitPlayer();
-
-                    Health playerHealth = closestObject.GetComponent<Health>();
-                    if (playerHealth != null)
-                    {
-                        playerHealth.Damage(damage * _damageMultiplier);
-                        impulseVelocityXZ *= playerHealth.GetHitForceMultiplier();
-                    }
-                }
-                print(impulseVelocityXZ);
-                print(impulseVelocityY);
-                var impulseVelocity = new Vector3(impulseVelocityXZ.x, impulseVelocityY, impulseVelocityXZ.y);
-                closestRB.velocity = new Vector3(closestRB.velocity.x, 0f, closestRB.velocity.z);
-                closestRB.AddForce(impulseVelocity, ForceMode.Impulse);
-            }
-        }
-    }*/
     private void OnTriggerEnter(Collider other)
     {
+        print("Added");
         objectsInHitbox.Add(other.gameObject);
     }
 
     private void OnTriggerExit(Collider other)
     {
+        print("Removed");
         objectsInHitbox.Remove(other.gameObject);
     }
 

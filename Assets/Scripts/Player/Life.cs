@@ -33,23 +33,18 @@ public class Life : MonoBehaviour
     }
     public void Gain(int amount)
     {
-        if (Alive)
-        {
-            currentLives = (currentLives + amount) > maxLives ? maxLives : (currentLives + amount);
-        }
+        if (!Alive) { return; }
+        currentLives += amount;
+        if (currentLives > maxLives) { currentLives = maxLives; }
+        print("Lives: " + currentLives);
     }
 
     public void Lose(int amount)
     {
-        if (Alive && GameManager.GAME_STATE == GameStatus.GAME)
-        {
-            currentLives -= amount;
-
-            if (currentLives <= 0)
-            {
-                Kill();
-            }
-        }
+        if (!Alive || !(GameManager.GAME_STATE == GameStatus.GAME)) { return; }
+        currentLives -= amount;
+        if (currentLives <= 0) { Kill(); }
+        print("Lives: " + currentLives);
     }
 
     public void Kill()
@@ -62,14 +57,15 @@ public class Life : MonoBehaviour
     private void OnDead()
     {
         // TODO: remove player..
-        //gameObject.SetActive(false); //Player input manager gives index out of bounds error..
+        gameObject.SetActive(false); //Player input manager gives index out of bounds error..
         //Destroy(gameObject); //Player input manager gives index out of bounds error..
-        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
-        rb.detectCollisions = false;
-        rb.useGravity = false;
-        rb.velocity = Vector3.zero;
-        gameObject.GetComponent<Collider>().enabled = false;
-        gameObject.GetComponent<Movement>().enabled = false;
+        //Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        //rb.detectCollisions = false;
+        //rb.useGravity = false;
+        //rb.velocity = Vector3.zero;
+        //gameObject.GetComponent<Collider>().enabled = false;
+        //gameObject.GetComponent<Movement>().enabled = false;
+
     }
 
 }

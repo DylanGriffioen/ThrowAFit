@@ -7,7 +7,7 @@ public class KillStartGameSFX : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(KillSoundObject());
+        Invoke("KillSoundObject", 5f);
     }
 
     // Update is called once per frame
@@ -16,9 +16,8 @@ public class KillStartGameSFX : MonoBehaviour
         
     }
 
-    IEnumerator KillSoundObject()
+    void KillSoundObject()
     {
-        yield return new WaitForSeconds(5f);
-        Destroy(DontDestroyPlaySound.Instance.gameObject);
+        //Destroy(DontDestroyPlaySound.Instance.gameObject);
     }
 }

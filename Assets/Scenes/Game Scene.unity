@@ -2008,7 +2008,7 @@ GameObject:
   - component: {fileID: 1815408863}
   - component: {fileID: 1815408862}
   m_Layer: 0
-  m_Name: ItemSpawner
+  m_Name: Item Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2995,29 +2995,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1464139188, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}
-      propertyPath: kickTime
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1464139188, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}
-      propertyPath: kickForce
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 1464139188, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}
-      propertyPath: punchTime
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1464139188, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}
-      propertyPath: kickEndLag
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 1464139188, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}
-      propertyPath: punchForce
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 1464139188, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}
-      propertyPath: punchEndLag
-      value: 0.1
+    - target: {fileID: 1933329991003171645, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}
+      propertyPath: ragdollThreshold
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5774686695662505663, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}
       propertyPath: m_Name
@@ -3066,30 +3046,6 @@ PrefabInstance:
     - target: {fileID: 7366384214068693024, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8306171032516819365, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}
-      propertyPath: m_Size.x
-      value: 0.7043457
-      objectReference: {fileID: 0}
-    - target: {fileID: 8306171032516819365, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}
-      propertyPath: m_Size.y
-      value: 1.2057858
-      objectReference: {fileID: 0}
-    - target: {fileID: 8306171032516819365, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}
-      propertyPath: m_Size.z
-      value: 0.8314592
-      objectReference: {fileID: 0}
-    - target: {fileID: 8306171032516819365, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}
-      propertyPath: m_Center.x
-      value: -7.8057067e-16
-      objectReference: {fileID: 0}
-    - target: {fileID: 8306171032516819365, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}
-      propertyPath: m_Center.y
-      value: -0.005493641
-      objectReference: {fileID: 0}
-    - target: {fileID: 8306171032516819365, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}
-      propertyPath: m_Center.z
-      value: -0.09210019
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07ac3b2354d2dd6468f42b45675cbaa9, type: 3}

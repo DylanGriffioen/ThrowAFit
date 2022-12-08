@@ -7,6 +7,7 @@ public class RagdollBehavior : MonoBehaviour
     [System.NonSerialized] public Vector3 velocity;
     [System.NonSerialized] public Movement movementScript;
     [System.NonSerialized] public Color color;
+    [System.NonSerialized] public bool offWhenNotMoving = true;
     Rigidbody[] rigidbodies;
     Rigidbody rootRB;
     SkinnedMeshRenderer render;
@@ -31,7 +32,7 @@ public class RagdollBehavior : MonoBehaviour
 
     void Update()
     {
-        if (root.position.y < 2.5f || rootRB.velocity.magnitude < 0.2f)
+        if (root.position.y < 4f || (rootRB.velocity.magnitude < 0.2f && offWhenNotMoving))
         {
             movementScript.TurnOffRagdoll();
         }
