@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc338de116d080448a22a71c62963ada, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardForce: 20
+  forwardForce: 30
   angle: 7
   knockback: 2
   onHitDamage: 25

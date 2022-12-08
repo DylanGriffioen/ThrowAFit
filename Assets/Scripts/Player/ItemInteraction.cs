@@ -47,7 +47,7 @@ public class ItemInteraction : MonoBehaviour
             objectsInLootArea.RemoveAt(closestIndex);
             var heldObjectTransform = heldObject.transform;
 
-            GameObject parentObject = heldObjectTransform.parent == null ? null : heldObjectTransform.parent.gameObject;
+            /*GameObject parentObject = heldObjectTransform.parent == null ? null : heldObjectTransform.parent.gameObject;
 
             if(parentObject == null || !parentObject.tag.Equals("PlayerItem"))
             {
@@ -86,9 +86,9 @@ public class ItemInteraction : MonoBehaviour
                     animator.SetBool("Carrying", true);
                     stolenFromPlayer.GetComponentInChildren<ItemInteraction>().LoseItem();
                 }
-            }
+            }*/
 
-            /*heldObjectTransform.parent = itemSlot;
+            heldObjectTransform.parent = itemSlot;
             heldObjectTransform.localPosition = new Vector3(0f,heldObjectTransform.localScale.y/2f,0f);
             heldObjectTransform.localRotation = Quaternion.identity;
 
@@ -104,7 +104,7 @@ public class ItemInteraction : MonoBehaviour
             movementScript.heldItemMass = mass;
 
             //Switch carrying bool in animator
-            animator.SetBool("Carrying", true);*/
+            animator.SetBool("Carrying", true);
         }
 
         //Drop

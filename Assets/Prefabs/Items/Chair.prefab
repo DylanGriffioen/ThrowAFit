@@ -129,6 +129,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forwardForce: 25
   angle: 15
-  knockback: 1.5
+  knockback: 2
   onHitDamage: 50
   destroyOnImpact: 0
