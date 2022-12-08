@@ -17,12 +17,12 @@ public class RagdollBehavior : MonoBehaviour
     {
         rigidbodies = GetComponentsInChildren<Rigidbody>();
         render = transform.parent.GetChild(1).GetComponent<SkinnedMeshRenderer>();
-        render.material.color = color;
         root = transform.GetChild(0);
         rootRB = root.GetComponent<Rigidbody>();
     }
     void Start()
     {
+        render.material.color = color;
         foreach (Rigidbody rb in rigidbodies)
         {
             rb.velocity = velocity + Random.insideUnitSphere*noise;

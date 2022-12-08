@@ -6,36 +6,36 @@ using UnityEngine.InputSystem;
 public class Life : MonoBehaviour
 {
 
-    [SerializeField] int maxLifes = 3;
-    [SerializeField] int currentLifes;
+    [SerializeField] int maxLives = 3;
+    [SerializeField] int currentLives;
     public bool Alive { get; private set; }
 
     void Awake()
     {
         if (GameManager._instance != null)
         {
-            maxLifes = GameManager._instance.MaxLifes > 0 ? GameManager._instance.MaxLifes : maxLifes;
+            maxLives = GameManager._instance.MaxLives > 0 ? GameManager._instance.MaxLives : maxLives;
         }
         else
         {
             Debug.Log("1");
         }
-        currentLifes = maxLifes;
+        currentLives = maxLives;
         Alive = true;
     }
     private void Update()
     {
         if (GameManager.GAME_STATE == GameStatus.PREGAME && GameManager._instance != null)
         {
-            maxLifes = GameManager._instance.MaxLifes > 0 ? GameManager._instance.MaxLifes : maxLifes;
-            currentLifes = maxLifes;
+            maxLives = GameManager._instance.MaxLives > 0 ? GameManager._instance.MaxLives : maxLives;
+            currentLives = maxLives;
         }
     }
     public void Gain(int amount)
     {
         if (Alive)
         {
-            currentLifes = (currentLifes + amount) > maxLifes ? maxLifes : (currentLifes + amount);
+            currentLives = (currentLives + amount) > maxLives ? maxLives : (currentLives + amount);
         }
     }
 
@@ -43,9 +43,9 @@ public class Life : MonoBehaviour
     {
         if (Alive && GameManager.GAME_STATE == GameStatus.GAME)
         {
-            currentLifes -= amount;
+            currentLives -= amount;
 
-            if (currentLifes <= 0)
+            if (currentLives <= 0)
             {
                 Kill();
             }

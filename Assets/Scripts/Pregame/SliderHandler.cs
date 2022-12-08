@@ -47,8 +47,8 @@ public class SliderHandler : MonoBehaviour
 
     private void Init()
     {
-        _lifeText.text = gameManager.MaxLifes.ToString();
-        _lifeSlider.value = gameManager.MaxLifes;
+        _lifeText.text = gameManager.MaxLives.ToString();
+        _lifeSlider.value = gameManager.MaxLives;
 
         _healthText.text = gameManager.MaxHealth.ToString("0.00");
         _healthSlider.value = gameManager.MaxHealth;
@@ -73,7 +73,7 @@ public class SliderHandler : MonoBehaviour
     {
         _lifeSlider.onValueChanged.AddListener((v) =>
         {
-            gameManager.MaxLifes = (int)v;
+            gameManager.MaxLives = (int)v;
             _lifeText.text = v.ToString();
         });
     }

@@ -40,9 +40,13 @@ public class Movement : MonoBehaviour
         animator = model.GetComponent<Animator>();
         avatar = animator.avatar;
         render = GetComponentInChildren<SkinnedMeshRenderer>();
-        color = render.material.color;
         coll = GetComponent<CapsuleCollider>();
         followScript = GetComponent<Follow>();
+    }
+    private void Start()
+    {
+        color = render.material.color;
+
     }
     void Update()
     {
@@ -211,12 +215,11 @@ public class Movement : MonoBehaviour
     public void ObjectHitPlayer()
     {
         print("Hit");
-        Invoke("TurnOnRagdoll", 0.02f);
+        //Invoke("TurnOnRagdoll", 0.02f);
     }  
-    void TurnOnRagdoll()
+    public void TurnOnRagdoll()
     {
         if (ragdolling) { return; }
-        print("Ragdoll On");
         ragdolling = true;
         render.enabled = false;
         rb.useGravity = false;
@@ -236,7 +239,6 @@ public class Movement : MonoBehaviour
     public void TurnOffRagdoll()
     {
         if (!ragdolling) { return; }
-        print("Ragdoll Off");
         ragdolling = false;
         followScript.enabled = false;
         Destroy(newRagdoll);

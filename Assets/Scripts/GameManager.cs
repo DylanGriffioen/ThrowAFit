@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     [Header("Game settings")]
     [Range(1, 10)]
     [SerializeField] int maxLifes = 3;
-    public int MaxLifes { get { return maxLifes; } set { maxLifes = value; } }
+    public int MaxLives { get { return maxLifes; } set { maxLifes = value; } }
 
     [Range(1f, 1000f)]
     [SerializeField] float maxHealth = 100f;
