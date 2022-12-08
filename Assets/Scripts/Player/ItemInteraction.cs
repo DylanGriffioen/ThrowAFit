@@ -14,7 +14,7 @@ public class ItemInteraction : MonoBehaviour
     Animator animator;
     bool throwNextFrame;
     bool pickupDropEnabled = true;
-    bool _canSteal = true;
+    bool _canSteal = false;
     void Awake()
     {
         itemSlot = transform.parent.GetChild(2);
@@ -31,7 +31,7 @@ public class ItemInteraction : MonoBehaviour
         if (itemSlot.childCount == 0 && objectsInLootArea.Count != 0)
         {
             //Find closest object in loot area
-            float objectDistance;   //                                          // tranform.parent = Player GameObject
+            float objectDistance;
             float closestDistance = (objectsInLootArea[0].transform.position - transform.parent.position).magnitude;
             int closestIndex = 0;
             for (int i = 1; i < objectsInLootArea.Count; i++)
@@ -89,7 +89,7 @@ public class ItemInteraction : MonoBehaviour
 
                     //Switch carrying bool in animator
                     animator.SetBool("Carrying", true);
-                    stolenFromPlayer.GetComponentInChildren<ItemInteraction>().LoseItem();
+                    stolenFromPlayer.GetComponentInChildren<ItemInteraction>().LoseItem(heldObjectTransform.gameObject);
                 }
             }
             /*
@@ -131,11 +131,13 @@ public class ItemInteraction : MonoBehaviour
             animator.SetBool("Carrying", false);
         }
     }
-    public void LoseItem()
+    public void LoseItem(GameObject o)
     {
         if (itemSlot.childCount == 0)
         {
             movementScript.holdingItem = false;
+
+            objectsInLootArea.Remove(o);
             animator.SetBool("Carrying", false);
         }
     }
