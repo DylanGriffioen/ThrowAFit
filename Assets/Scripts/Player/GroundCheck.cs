@@ -6,7 +6,7 @@ public class GroundCheck : MonoBehaviour
 {
     Movement movementScript;
     Animator animator;
-    bool onGround;
+    public bool onGround;
     void Awake()
     {
         movementScript = transform.GetComponentInParent<Movement>();

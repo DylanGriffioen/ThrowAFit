@@ -22,7 +22,7 @@ public class Movement : MonoBehaviour
 
     Vector3 origScale, origLocalPos, itemSlotOrigScale;
     Vector2 inputDir, moveDir;
-    bool crouching, movePressed, moving, movingLastFrame, jumping, falling, jumpingLeftGround, ragdollSwitch;
+    public bool crouching, movePressed, moving, movingLastFrame, jumping, falling, jumpingLeftGround, ragdollSwitch;
     [System.NonSerialized] public bool holdingItem, onGround, ragdolling, movementEnabled = true;
     [System.NonSerialized] public float heldItemMass = 1f;
     float targetAngle, smoothAngle, smoothTurnVelocity, moveSpeed, moveSpeedMult, jumpSpeed, jumpHeightMult, jumpPercent, speedMultLastFrame, gravity, mass;

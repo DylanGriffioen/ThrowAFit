@@ -153,7 +153,7 @@ public class GameManager : MonoBehaviour
             {
                 GameObject spawnArea = GameObject.Find("ThrowAFitBuilding");
                 float dropHeight = 2f;
-                float distanceToEdge = 2f;
+                float distanceToEdge = 90f;
 
                 //give player random location and move to parent "Players"
                 foreach (GameObject player in _players)
@@ -169,6 +169,10 @@ public class GameManager : MonoBehaviour
                     
                     if (spawnArea != null)
                         player.transform.position = RandomLocation.GetRandomLocationOnObject(spawnArea, distanceToEdge, dropHeight);
+
+                    player.GetComponentInChildren<GroundCheck>().onGround = false;
+                    player.GetComponentInChildren<Movement>().onGround = false;
+                    player.GetComponentInChildren<Movement>().jumping = true;
 
                 }
                 _playersSet = true;
