@@ -19,24 +19,10 @@ public class InputHandler : MonoBehaviour
 
     private float _forceMultiplier = 1f;
     private float _damageMultiplier = 1f;
-    void Start()
-    {
-        if (GameManager._instance != null)
-        {
-            _forceMultiplier = GameManager._instance.ForceMultiplier > 0 ? GameManager._instance.ForceMultiplier : _forceMultiplier;
-            _damageMultiplier = GameManager._instance.DamageMultiplier > 0 ? GameManager._instance.DamageMultiplier : _damageMultiplier;
-        }
-    }
 
-    private void Update()
-    {
-        if (GameManager._instance != null && GameManager.GAME_STATE == GameStatus.PREGAME)
-        {
-            _forceMultiplier = GameManager._instance.ForceMultiplier > 0 ? GameManager._instance.ForceMultiplier : _forceMultiplier;
-            _damageMultiplier = GameManager._instance.DamageMultiplier > 0 ? GameManager._instance.DamageMultiplier : _damageMultiplier;
-        }
-    }
+    Movement movementScript;
 
+    
 
     public void OnPause(InputAction.CallbackContext ctx)
     {
@@ -71,8 +57,8 @@ public class InputHandler : MonoBehaviour
     {
         if (!ctx.performed)
             return;
+        movementScript.movementEnabled = false;
         string[] punchAnimations = { "Punch", "Punch2" };
-
 
         Debug.Log("Punch!");
         playerAnimator.SetTrigger(punchAnimations[Random.Range(0, punchAnimations.Length)]);
@@ -83,7 +69,7 @@ public class InputHandler : MonoBehaviour
     {
         if (!ctx.performed)
             return;
-
+        movementScript.movementEnabled = false;
         Debug.Log("Kick!");
         playerAnimator.SetTrigger("Kick");
         StartCoroutine(FinishHit(kickAnimationTime, kickDamage, kickForce));
@@ -139,9 +125,6 @@ public class InputHandler : MonoBehaviour
                 closestRB.velocity = new Vector3(closestRB.velocity.x, 0f, closestRB.velocity.z);
                 closestRB.AddForce(impulseVelocity, ForceMode.Impulse);
             }
-
         }
     }
-
-
 }

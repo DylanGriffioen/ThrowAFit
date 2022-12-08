@@ -630,6 +630,51 @@ Transform:
   m_Father: {fileID: 5351522700362832316}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4039512189477061220
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5204514103822712445}
+  - component: {fileID: 8306171032516819365}
+  m_Layer: 11
+  m_Name: PunchArea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5204514103822712445
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4039512189477061220}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.2399998, z: 1.0500002}
+  m_LocalScale: {x: 2, y: 2, z: 1.7000002}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7366384214068693024}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8306171032516819365
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4039512189477061220}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5880246, y: 0.68688345, z: 0.6157134}
+  m_Center: {x: -1.8469253e-15, y: 0.2539575, z: -0.19997312}
 --- !u!1 &4421517934095861774
 GameObject:
   m_ObjectHideFlags: 0
@@ -830,6 +875,7 @@ Transform:
   - {fileID: 1147881715878648111}
   - {fileID: 1291966749589997237}
   - {fileID: 6329278158299902327}
+  - {fileID: 5204514103822712445}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
@@ -939,15 +985,51 @@ MonoBehaviour:
     m_ActionId: f5ba3c21-15d7-423c-8264-7f11ada39636
     m_ActionName: Ingame/Throw[/Keyboard/f]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6323127227980615082}
+        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
+        m_MethodName: OnPause
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: e355ec04-fae1-4cc2-bdbc-1e04f94dd9e9
     m_ActionName: Ingame/Pause[/Keyboard/escape]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6323127227980615082}
+        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
+        m_MethodName: OnPunch
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 2f612e83-725d-4270-803f-cf2fcc1d64da
     m_ActionName: Ingame/Punch
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 6323127227980615082}
+        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
+        m_MethodName: OnKick
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 1a8e3108-082f-498e-a350-aeea2bc7a1dd
     m_ActionName: Ingame/Kick
   - m_PersistentCalls:
@@ -1074,8 +1156,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61a135acf4074ae428ed130ff01fe115, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxLifes: 3
-  currentLifes: 0
+  maxLives: 3
+  currentLives: 0
 --- !u!114 &6323127227980615082
 MonoBehaviour:
   m_ObjectHideFlags: 0

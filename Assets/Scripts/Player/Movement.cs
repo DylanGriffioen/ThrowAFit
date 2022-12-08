@@ -22,8 +22,8 @@ public class Movement : MonoBehaviour
 
     Vector3 origScale, origLocalPos, itemSlotOrigScale;
     Vector2 inputDir, moveDir;
-    bool crouching, movePressed, moving, movingLastFrame, jumping, falling, jumpingLeftGround, ragdollSwitch, movementEnabled = true;
-    [System.NonSerialized] public bool holdingItem, onGround, ragdolling;
+    bool crouching, movePressed, moving, movingLastFrame, jumping, falling, jumpingLeftGround, ragdollSwitch;
+    [System.NonSerialized] public bool holdingItem, onGround, ragdolling, movementEnabled = true;
     [System.NonSerialized] public float heldItemMass = 1f;
     float targetAngle, smoothAngle, smoothTurnVelocity, moveSpeed, moveSpeedMult, jumpSpeed, jumpHeightMult, jumpPercent, speedMultLastFrame, gravity, mass;
     
@@ -46,7 +46,6 @@ public class Movement : MonoBehaviour
     private void Start()
     {
         color = render.material.color;
-
     }
     void Update()
     {
@@ -215,7 +214,7 @@ public class Movement : MonoBehaviour
     public void ObjectHitPlayer()
     {
         print("Hit");
-        //Invoke("TurnOnRagdoll", 0.02f);
+        Invoke("TurnOnRagdoll", 0.02f);
     }  
     public void TurnOnRagdoll()
     {
