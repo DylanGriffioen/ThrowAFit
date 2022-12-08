@@ -14,7 +14,7 @@ public class ItemInteraction : MonoBehaviour
     Animator animator;
     bool throwNextFrame;
     bool pickupDropEnabled = true;
-    bool _canSteal = false;
+    bool _canSteal = true;
     void Awake()
     {
         itemSlot = transform.parent.GetChild(2);
@@ -49,7 +49,7 @@ public class ItemInteraction : MonoBehaviour
             objectsInLootArea.RemoveAt(closestIndex);
             var heldObjectTransform = heldObject.transform;
 
-            /*GameObject parentObject = heldObjectTransform.parent == null ? null : heldObjectTransform.parent.gameObject;
+            GameObject parentObject = heldObjectTransform.parent == null ? null : heldObjectTransform.parent.gameObject;
 
             if(parentObject == null || !parentObject.tag.Equals("PlayerItem"))
             {
@@ -60,10 +60,13 @@ public class ItemInteraction : MonoBehaviour
 
                 //Store values and destroy the Rigidbody component
                 var rb = heldObject.GetComponent<Rigidbody>();
-                mass = rb.mass;
-                drag = rb.drag;
-                angularDrag = rb.angularDrag;
-                Destroy(rb);
+                if (rb != null)
+                {
+                    mass = rb.mass;
+                    drag = rb.drag;
+                    angularDrag = rb.angularDrag;
+                    Destroy(rb);
+                }
                 movementScript.holdingItem = true;
                 movementScript.heldItemMass = mass;
 
@@ -88,8 +91,8 @@ public class ItemInteraction : MonoBehaviour
                     animator.SetBool("Carrying", true);
                     stolenFromPlayer.GetComponentInChildren<ItemInteraction>().LoseItem();
                 }
-            }*/
-
+            }
+            /*
             heldObjectTransform.parent = itemSlot;
             heldObjectTransform.localPosition = new Vector3(0f,heldObjectTransform.localScale.y/2f,0f);
             heldObjectTransform.localRotation = Quaternion.identity;
@@ -106,7 +109,7 @@ public class ItemInteraction : MonoBehaviour
             movementScript.heldItemMass = mass;
 
             //Switch carrying bool in animator
-            animator.SetBool("Carrying", true);
+            animator.SetBool("Carrying", true);*/
         }
 
         //Drop
@@ -117,9 +120,12 @@ public class ItemInteraction : MonoBehaviour
 
             //Add Rigidbody and assign stored values
             var rb = heldObject.AddComponent<Rigidbody>();
-            rb.mass = mass;
-            rb.drag = drag;
-            rb.angularDrag = angularDrag;
+            if(rb != null)
+            {
+                rb.mass = mass;
+                rb.drag = drag;
+                rb.angularDrag = angularDrag;
+            }
 
             //Switch carrying bool in animator
             animator.SetBool("Carrying", false);
@@ -139,6 +145,7 @@ public class ItemInteraction : MonoBehaviour
         if(itemSlot.childCount != 0)
         {
             movementScript.holdingItem = false;
+            objectsInLootArea.Remove(heldObject);
             Destroy(heldObject);
 
             //Switch carrying bool in animator
@@ -189,10 +196,7 @@ public class ItemInteraction : MonoBehaviour
         pickupDropEnabled = true;
     }
 
-    public void ClearObjectsInLootArea()
-    {
-        objectsInLootArea = new List<GameObject>();
-    }
+
     private void OnTriggerEnter(Collider other)
     {
         objectsInLootArea.Add(other.gameObject);

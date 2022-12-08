@@ -163,7 +163,6 @@ public class GameManager : MonoBehaviour
                     if (itemInteraction != null)
                     {
                         itemInteraction.DropDestroyItem();
-                        itemInteraction.ClearObjectsInLootArea();
                     }
 
                     
