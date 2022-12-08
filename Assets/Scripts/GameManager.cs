@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
     public int PlayerCount { get; set; }   
     [SerializeField] GameObject[] _players;
 
+    public GameObject[] Players() { return _players; }
 
     private bool _playersSet = false;
 

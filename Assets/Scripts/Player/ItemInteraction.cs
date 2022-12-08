@@ -22,6 +22,7 @@ public class ItemInteraction : MonoBehaviour
         animator = transform.parent.GetComponentInChildren<Animator>();
     }
 
+    public List<GameObject> GetObjectsInLootArea() { return objectsInLootArea; }
 
     public void OnPickupDrop(InputAction.CallbackContext ctx)
     {
@@ -72,6 +73,25 @@ public class ItemInteraction : MonoBehaviour
 
                 //Switch carrying bool in animator
                 animator.SetBool("Carrying", true);
+
+                if(GameManager._instance != null && GameManager._instance.Players() != null)
+                {
+                    foreach (GameObject player in GameManager._instance.Players())
+                    {
+                        if (player.Equals(gameObject.transform.parent))
+                            continue;
+
+                        ItemInteraction ii = player.GetComponentInChildren<ItemInteraction>();
+                        if (ii != null)
+                        {
+                            if (ii.GetObjectsInLootArea().Contains(heldObject))
+                            {
+                                ii.GetObjectsInLootArea().Remove(heldObject);
+                            }
+                        }
+                    }
+                }
+
             }
             else
             {
@@ -146,12 +166,14 @@ public class ItemInteraction : MonoBehaviour
         if(itemSlot.childCount != 0)
         {
             movementScript.holdingItem = false;
-            objectsInLootArea.Remove(heldObject);
+            //objectsInLootArea.Remove(heldObject);
             Destroy(heldObject);
 
             //Switch carrying bool in animator
             animator.SetBool("Carrying", false);
         }
+
+        objectsInLootArea.Clear();
     }
 
     public void OnThrow(InputAction.CallbackContext ctx)

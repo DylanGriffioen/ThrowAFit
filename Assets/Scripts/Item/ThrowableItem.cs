@@ -53,7 +53,10 @@ public class ThrowableItem : MonoBehaviour
         {
             var collRB = collision.rigidbody;
             var collGO = collision.gameObject;
-            var impulseVelocityXZ = new Vector2(rb.velocity.x, rb.velocity.z) * rb.mass * knockback * _forceMultiplier;
+            var impulseVelocityXZ = new Vector2(rb.velocity.x, rb.velocity.z) * knockback * _forceMultiplier;
+            if (rb != null)
+                impulseVelocityXZ *= rb.mass;
+
             var impulseVelocityY = impulseVelocityXZ.magnitude * Mathf.Tan(hitImpulseAngle * Mathf.Deg2Rad);
             if (collGO.CompareTag("Player"))
             {
