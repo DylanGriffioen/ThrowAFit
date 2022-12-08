@@ -161,7 +161,11 @@ public class GameManager : MonoBehaviour
                     
                     ItemInteraction itemInteraction = player.GetComponentInChildren<ItemInteraction>();
                     if (itemInteraction != null)
+                    {
                         itemInteraction.DropDestroyItem();
+                        itemInteraction.ClearObjectsInLootArea();
+                    }
+
                     
                     if (spawnArea != null)
                         player.transform.position = RandomLocation.GetRandomLocationOnObject(spawnArea, distanceToEdge, dropHeight);

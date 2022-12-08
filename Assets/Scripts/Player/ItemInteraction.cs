@@ -21,6 +21,8 @@ public class ItemInteraction : MonoBehaviour
         movementScript = transform.parent.GetComponent<Movement>();
         animator = transform.parent.GetComponentInChildren<Animator>();
     }
+
+
     public void OnPickupDrop(InputAction.CallbackContext ctx)
     {
         if (!pickupDropEnabled || !ctx.performed) { return; }
@@ -29,7 +31,7 @@ public class ItemInteraction : MonoBehaviour
         if (itemSlot.childCount == 0 && objectsInLootArea.Count != 0)
         {
             //Find closest object in loot area
-            float objectDistance;
+            float objectDistance;   //                                          // tranform.parent = Player GameObject
             float closestDistance = (objectsInLootArea[0].transform.position - transform.parent.position).magnitude;
             int closestIndex = 0;
             for (int i = 1; i < objectsInLootArea.Count; i++)
@@ -186,12 +188,19 @@ public class ItemInteraction : MonoBehaviour
     {
         pickupDropEnabled = true;
     }
+
+    public void ClearObjectsInLootArea()
+    {
+        objectsInLootArea = new List<GameObject>();
+    }
     private void OnTriggerEnter(Collider other)
     {
         objectsInLootArea.Add(other.gameObject);
+        Debug.Log("+1: " + objectsInLootArea.ToString());
     }
     private void OnTriggerExit(Collider other)
     {
         objectsInLootArea.Remove(other.gameObject);
+        Debug.Log("-1: " + objectsInLootArea.ToString());
     }
 }
