@@ -169,7 +169,6 @@ public class GameManager : MonoBehaviour
                     
                     if (spawnArea != null)
                         player.transform.position = RandomLocation.GetRandomLocationOnObject(spawnArea, distanceToEdge, dropHeight);
-
                 }
                 _playersSet = true;
                 GAME_STATE = GameStatus.GAME;

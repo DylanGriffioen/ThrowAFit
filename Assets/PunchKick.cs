@@ -135,12 +135,18 @@ public class PunchKick : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        objectsInHitbox.Add(other.gameObject);
+        if(other.gameObject.layer != 9)
+        {
+            objectsInHitbox.Add(other.gameObject);
+        }
     }
 
 
     private void OnTriggerExit(Collider other)
     {
-        objectsInHitbox.Remove(other.gameObject);
+        if (other.gameObject.layer != 9)
+        {
+            objectsInHitbox.Remove(other.gameObject);
+        }
     }
 }
