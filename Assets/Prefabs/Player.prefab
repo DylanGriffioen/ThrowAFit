@@ -640,6 +640,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5204514103822712445}
   - component: {fileID: 8306171032516819365}
+  - component: {fileID: 5840515852214555014}
   m_Layer: 11
   m_Name: PunchArea
   m_TagString: Untagged
@@ -675,6 +676,25 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.5880246, y: 0.68688345, z: 0.6157134}
   m_Center: {x: -1.8469253e-15, y: 0.2539575, z: -0.19997312}
+--- !u!114 &5840515852214555014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4039512189477061220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a24463d6eb66cb749bd54971fa001321, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  punchDamage: 15
+  punchAnimationTime: 0.5
+  punchForce: 1
+  kickDamage: 30
+  kickAnimationTime: 1
+  kickForce: 2
+  hitImpulseAngle: 15
 --- !u!1 &4421517934095861774
 GameObject:
   m_ObjectHideFlags: 0
@@ -850,8 +870,8 @@ GameObject:
   - component: {fileID: 7408622296358188392}
   - component: {fileID: 9079079687053978050}
   - component: {fileID: 2681886870537829298}
-  - component: {fileID: 6323127227980615082}
   - component: {fileID: 920680659}
+  - component: {fileID: 6228321905606540981}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -986,8 +1006,8 @@ MonoBehaviour:
     m_ActionName: Ingame/Throw[/Keyboard/f]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6323127227980615082}
-        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
+      - m_Target: {fileID: 6228321905606540981}
+        m_TargetAssemblyTypeName: PauseHandler, Assembly-CSharp
         m_MethodName: OnPause
         m_Mode: 0
         m_Arguments:
@@ -1002,8 +1022,8 @@ MonoBehaviour:
     m_ActionName: Ingame/Pause[/Keyboard/escape]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6323127227980615082}
-        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
+      - m_Target: {fileID: 5840515852214555014}
+        m_TargetAssemblyTypeName: PunchKick, Assembly-CSharp
         m_MethodName: OnPunch
         m_Mode: 0
         m_Arguments:
@@ -1018,8 +1038,8 @@ MonoBehaviour:
     m_ActionName: Ingame/Punch
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6323127227980615082}
-        m_TargetAssemblyTypeName: InputHandler, Assembly-CSharp
+      - m_Target: {fileID: 5840515852214555014}
+        m_TargetAssemblyTypeName: PunchKick, Assembly-CSharp
         m_MethodName: OnKick
         m_Mode: 0
         m_Arguments:
@@ -1158,26 +1178,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxLives: 3
   currentLives: 0
---- !u!114 &6323127227980615082
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5774686695662505663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f34b058bf3de6734c8ad0e14a9f8ea15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerAnimator: {fileID: 2557210179212397296}
-  punchDamage: 15
-  punchAnimationTime: 0.5
-  punchForce: 1
-  kickDamage: 30
-  kickAnimationTime: 1
-  kickForce: 2
-  hitImpulseAngle: 15
 --- !u!114 &920680659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1192,6 +1192,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lerpValue: 0.882
   target: {fileID: 0}
+--- !u!114 &6228321905606540981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5774686695662505663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f34b058bf3de6734c8ad0e14a9f8ea15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5789769208709025391
 GameObject:
   m_ObjectHideFlags: 0
