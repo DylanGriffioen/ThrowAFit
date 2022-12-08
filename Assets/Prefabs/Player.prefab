@@ -640,7 +640,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5204514103822712445}
   - component: {fileID: 8306171032516819365}
-  - component: {fileID: 5840515852214555014}
+  - component: {fileID: 1464139188}
   m_Layer: 11
   m_Name: PunchArea
   m_TagString: PunchArea
@@ -676,7 +676,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.5880246, y: 0.68688345, z: 0.6157134}
   m_Center: {x: -1.8469253e-15, y: 0.2539575, z: -0.19997312}
---- !u!114 &5840515852214555014
+--- !u!114 &1464139188
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -689,10 +689,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   punchDamage: 15
-  punchAnimationTime: 0.5
+  punchTime: 0.25
+  punchEndLag: 0.1
   punchForce: 1
   kickDamage: 30
-  kickAnimationTime: 1
+  kickTime: 0.7
+  kickEndLag: 0.3
   kickForce: 2
   hitImpulseAngle: 15
 --- !u!1 &4421517934095861774
@@ -1022,7 +1024,7 @@ MonoBehaviour:
     m_ActionName: Ingame/Pause[/Keyboard/escape]
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5840515852214555014}
+      - m_Target: {fileID: 1464139188}
         m_TargetAssemblyTypeName: PunchKick, Assembly-CSharp
         m_MethodName: OnPunch
         m_Mode: 0
@@ -1038,7 +1040,7 @@ MonoBehaviour:
     m_ActionName: Ingame/Punch
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5840515852214555014}
+      - m_Target: {fileID: 1464139188}
         m_TargetAssemblyTypeName: PunchKick, Assembly-CSharp
         m_MethodName: OnKick
         m_Mode: 0
@@ -1394,6 +1396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6027792e8e3b3dd418960bc6e77dd2df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onGround: 0
 --- !u!65 &6686449261493427140
 BoxCollider:
   m_ObjectHideFlags: 0

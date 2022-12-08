@@ -17,8 +17,8 @@ public class Joining : MonoBehaviour
         
     }
 
-    void OnPlayerJoined()
+    /*void OnPlayerJoined()
     {
         cameraMovement.FindPlayers();
-    }
+    }*/
 }

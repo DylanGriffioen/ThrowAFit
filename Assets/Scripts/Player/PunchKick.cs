@@ -8,11 +8,13 @@ public class PunchKick : MonoBehaviour
     Animator animator;
 
     [SerializeField] float punchDamage = 15;
-    [SerializeField] float punchAnimationTime = 0.5f;
+    [SerializeField] float punchTime = 0.5f;
+    [SerializeField] float punchEndLag = 0.2f;
     [SerializeField] float punchForce = 1f;
 
     [SerializeField] float kickDamage = 30;
-    [SerializeField] float kickAnimationTime = 1f;
+    [SerializeField] float kickTime = 0.5f;
+    [SerializeField] float kickEndLag = 0.2f;
     [SerializeField] float kickForce = 2f;
 
     [SerializeField] float hitImpulseAngle = 15f;
@@ -23,6 +25,10 @@ public class PunchKick : MonoBehaviour
     List<GameObject> objectsInHitbox = new List<GameObject>();
 
     Movement movementScript;
+
+    bool kicking, punching, idlingEnabled, idlingEnabledLastFrame, animating, hitting;
+    float animationHitTime, animationEndLag, animationTotalTime, timer, animationSplit;
+    string currentAnimationTimer;
     void Awake()
     {
         movementScript = transform.parent.GetComponent<Movement>();
@@ -36,8 +42,29 @@ public class PunchKick : MonoBehaviour
     void Update()
     {
         UpdateMultipliers();
+        AnimationTime();
     }
-
+    
+    void AnimationTime()
+    {
+        if (animating)
+        {
+            timer += Time.deltaTime;
+            if (timer < animationHitTime)
+            {
+                animator.SetFloat("Animation Timer", (timer/animationHitTime)*animationSplit);
+            }
+            else if (timer < animationTotalTime)
+            {
+                animator.SetFloat("Animation Timer", animationSplit + (timer - animationHitTime) / animationEndLag * (1 - animationSplit));
+            }
+            else
+            {
+                animator.SetFloat("Animation Timer", 1f);
+                animating = false;
+            }
+        }
+    }
     void UpdateMultipliers()
     {
         if (GameManager._instance != null && GameManager.GAME_STATE == GameStatus.PREGAME)
@@ -55,28 +82,85 @@ public class PunchKick : MonoBehaviour
 
     public void OnPunch(InputAction.CallbackContext ctx)
     {
-        if (!ctx.performed)
+        if (!ctx.performed || hitting || movementScript.movementEnabled == false)
             return;
+        hitting = true;
         movementScript.movementEnabled = false;
         string[] punchAnimations = { "Punch", "Punch2" };
-
-        Debug.Log("Punch!");
-        animator.SetTrigger(punchAnimations[Random.Range(0, punchAnimations.Length)]);
-        StartCoroutine(FinishHit(punchAnimationTime, punchDamage, punchForce));
+        var randInt = Random.Range(0, punchAnimations.Length);
+        animator.SetTrigger(punchAnimations[randInt]);
+        animationSplit = randInt == 0 ? 0.55f : 0.7f;
+        StartCoroutine(Hit(punchTime, punchEndLag, punchDamage, punchForce));
+        animator.SetBool("Idling Enabled", false);
     }
 
     public void OnKick(InputAction.CallbackContext ctx)
     {
-        if (!ctx.performed)
+        if (!ctx.performed || hitting || movementScript.movementEnabled == false)
             return;
+        hitting = true;
         movementScript.movementEnabled = false;
-        Debug.Log("Kick!");
         animator.SetTrigger("Kick");
-        StartCoroutine(FinishHit(kickAnimationTime, kickDamage, kickForce));
+        animationSplit = 0.45f;
+        StartCoroutine(Hit(kickTime, kickEndLag, kickDamage, kickForce));
+        animator.SetBool("Idling Enabled", false);
     }
+    IEnumerator Hit(float hitTime, float endLag, float damage, float force)
+    {
+        animating = true;
+        animationHitTime = hitTime;
+        animationEndLag = endLag;
+        animationTotalTime = hitTime + endLag;
+        timer = 0f;
+
+        yield return new WaitForSeconds(hitTime);
+        
+        //Remove Destroyed objects
+        for (int i = objectsInHitbox.Count-1; i >= 0; i--)
+        {
+            if (objectsInHitbox[i] == null)
+            {
+                objectsInHitbox.RemoveAt(i);
+            }
+        }
+
+        //Apply things to each object in area
+        foreach (GameObject obj in objectsInHitbox)
+        {
+            
+            var hitRB = obj.GetComponent<Rigidbody>();
+            if (hitRB == null) { continue; }
+            Vector2 impulseVelocityXZ = transform.forward * force * _forceMultiplier;
+            float impulseVelocityY = impulseVelocityXZ.magnitude * Mathf.Tan(hitImpulseAngle * Mathf.Deg2Rad);
+
+            if (obj.CompareTag("Player"))
+            {
+                var movementScript = obj.GetComponent<Movement>();
+                movementScript.ObjectHitPlayer();
+
+                Health playerHealth = obj.GetComponent<Health>();
+                if (playerHealth != null)
+                {
+                    impulseVelocityXZ *= playerHealth.GetHitForceMultiplier();
+                    playerHealth.Damage(damage * _damageMultiplier);
+                }
+            }
+            print(impulseVelocityXZ);
+            print(impulseVelocityY);
+            var impulseVelocity = new Vector3(impulseVelocityXZ.x, impulseVelocityY, impulseVelocityXZ.y);
+            hitRB.velocity = new Vector3(hitRB.velocity.x, 0f, hitRB.velocity.z);
+            hitRB.AddForce(impulseVelocity, ForceMode.Impulse);
+        }
+
+        yield return new WaitForSeconds(endLag);
+        movementScript.movementEnabled = true;
+        hitting = false;
+        animator.SetBool("Idling Enabled", true);
+    }
+    
 
 
-    IEnumerator FinishHit(float animationTime, float damage, float force)
+    /*IEnumerator FinishHit(float animationTime, float damage, float force)
     {
         yield return new WaitForSeconds(animationTime);
 
@@ -110,7 +194,7 @@ public class PunchKick : MonoBehaviour
             if (closestRB != null)
             {
 
-                Vector3 impulseVelocityXZ = gameObject.transform.forward * force * _forceMultiplier;
+                Vector3 impulseVelocityXZ = transform.forward * force * _forceMultiplier;
                 float impulseVelocityY = impulseVelocityXZ.magnitude * Mathf.Tan(hitImpulseAngle * Mathf.Deg2Rad);
 
                 if (closestObject.CompareTag("Player"))
@@ -132,21 +216,15 @@ public class PunchKick : MonoBehaviour
                 closestRB.AddForce(impulseVelocity, ForceMode.Impulse);
             }
         }
-    }
+    }*/
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.layer != 9)
-        {
-            objectsInHitbox.Add(other.gameObject);
-        }
+        objectsInHitbox.Add(other.gameObject);
     }
-
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer != 9)
-        {
-            objectsInHitbox.Remove(other.gameObject);
-        }
+        objectsInHitbox.Remove(other.gameObject);
     }
+
 }

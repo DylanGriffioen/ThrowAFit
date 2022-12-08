@@ -13,7 +13,6 @@ public class Movement : MonoBehaviour
     Animator animator;
     Transform itemSlot;
     Collider coll;
-    Avatar avatar;
     GameObject newRagdoll;
     SkinnedMeshRenderer render;
     Color color;
@@ -22,7 +21,7 @@ public class Movement : MonoBehaviour
 
     Vector3 origScale, origLocalPos, itemSlotOrigScale;
     Vector2 inputDir, moveDir;
-    public bool crouching, movePressed, moving, movingLastFrame, jumping, falling, jumpingLeftGround, ragdollSwitch;
+    bool crouching, movePressed, moving, movingLastFrame, jumping, falling, jumpingLeftGround, ragdollSwitch;
     [System.NonSerialized] public bool holdingItem, onGround, ragdolling, movementEnabled = true;
     [System.NonSerialized] public float heldItemMass = 1f;
     float targetAngle, smoothAngle, smoothTurnVelocity, moveSpeed, moveSpeedMult, jumpSpeed, jumpHeightMult, jumpPercent, speedMultLastFrame, gravity, mass;
@@ -38,7 +37,6 @@ public class Movement : MonoBehaviour
         itemSlotOrigScale = itemSlot.localScale;
         origLocalPos = model.localPosition;
         animator = model.GetComponent<Animator>();
-        avatar = animator.avatar;
         render = GetComponentInChildren<SkinnedMeshRenderer>();
         coll = GetComponent<CapsuleCollider>();
         followScript = GetComponent<Follow>();
@@ -98,6 +96,7 @@ public class Movement : MonoBehaviour
     {
         if (!moving) 
         {
+            rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
             return; 
         }
 

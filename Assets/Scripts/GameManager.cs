@@ -170,9 +170,9 @@ public class GameManager : MonoBehaviour
                     if (spawnArea != null)
                         player.transform.position = RandomLocation.GetRandomLocationOnObject(spawnArea, distanceToEdge, dropHeight);
 
-                    player.GetComponentInChildren<GroundCheck>().onGround = false;
-                    player.GetComponentInChildren<Movement>().onGround = false;
-                    player.GetComponentInChildren<Movement>().jumping = true;
+                    //player.GetComponentInChildren<GroundCheck>().onGround = false;
+                    //player.GetComponentInChildren<Movement>().onGround = false;
+                    //player.GetComponentInChildren<Movement>().jumping = true;
 
                 }
                 _playersSet = true;

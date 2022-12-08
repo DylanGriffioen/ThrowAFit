@@ -18,7 +18,7 @@ public class Life : MonoBehaviour
         }
         else
         {
-            Debug.Log("1");
+            //Debug.Log("1");
         }
         currentLives = maxLives;
         Alive = true;

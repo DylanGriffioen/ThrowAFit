@@ -7,6 +7,7 @@ public class GroundCheck : MonoBehaviour
     Movement movementScript;
     Animator animator;
     public bool onGround;
+    bool triggering, onGroundLastFrame;
     void Awake()
     {
         movementScript = transform.GetComponentInParent<Movement>();
@@ -15,20 +16,22 @@ public class GroundCheck : MonoBehaviour
 
     void Update()
     {
+        onGround = triggering;
+        if (onGround != onGroundLastFrame)
+        {
+            movementScript.onGround = onGround;
+            animator.SetBool("On Ground", onGround);
+        }
+        onGroundLastFrame = onGround;
+    }
 
+    private void FixedUpdate()
+    {
+        triggering = false;
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (onGround) { return; }
-        movementScript.onGround = true;
-        animator.SetBool("On Ground", true);
-        onGround = true;
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        onGround = false;
-        movementScript.onGround = false;
-        animator.SetBool("On Ground", false);
+        triggering = true;
     }
 }
