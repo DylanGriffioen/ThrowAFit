@@ -14,7 +14,7 @@ public class ItemInteraction : MonoBehaviour
     Animator animator;
     bool throwNextFrame;
     bool pickupDropEnabled = true;
-    bool _canSteal = false;
+    bool _canSteal = true;
     void Awake()
     {
         itemSlot = transform.parent.GetChild(2);
@@ -136,7 +136,6 @@ public class ItemInteraction : MonoBehaviour
         if (itemSlot.childCount == 0)
         {
             movementScript.holdingItem = false;
-
             objectsInLootArea.Remove(o);
             animator.SetBool("Carrying", false);
         }
