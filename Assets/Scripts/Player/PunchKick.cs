@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class PunchKick : MonoBehaviour
 {
+    private bool _canPunchKick = false;
+
     PlaySFX sfxPlayer;
     Animator animator;
 
@@ -83,6 +85,8 @@ public class PunchKick : MonoBehaviour
     }
     public void OnPunch(InputAction.CallbackContext ctx)
     {
+        if (!_canPunchKick)
+            return;
         if (!ctx.performed || hitting || !movementScript.movementEnabled || movementScript.holdingItem)
             return;
         hitting = true;
@@ -96,6 +100,8 @@ public class PunchKick : MonoBehaviour
     }
     public void OnKick(InputAction.CallbackContext ctx)
     {
+        if (!_canPunchKick)
+            return;
         if (!ctx.performed || hitting || !movementScript.movementEnabled || movementScript.holdingItem)
             return;
         hitting = true;
