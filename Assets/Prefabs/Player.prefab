@@ -1135,7 +1135,7 @@ MonoBehaviour:
   smoothTurnTime: 0.07
   crouchHeightMult: 0.5
   crouchWidthMult: 1.2
-  ragdollThreshold: 3
+  ragdollThreshold: 7
   ragdoll: {fileID: 2372407157869887982, guid: 074747c7a806acc4abcdd067a2c7fb8a, type: 3}
 --- !u!114 &7408622296358188392
 MonoBehaviour:

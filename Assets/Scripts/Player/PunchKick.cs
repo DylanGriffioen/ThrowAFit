@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PunchKick : MonoBehaviour
 {
+    PlaySFX sfxPlayer;
     Animator animator;
 
     [SerializeField] float punchDamage = 15;
@@ -32,6 +33,7 @@ public class PunchKick : MonoBehaviour
     {
         movementScript = transform.parent.GetComponent<Movement>();
         animator = transform.parent.GetComponentInChildren<Animator>();
+        sfxPlayer = GameObject.Find("SFX").GetComponent<PlaySFX>();
     }
     void Start()
     {
@@ -148,8 +150,8 @@ public class PunchKick : MonoBehaviour
             var impulseVelocity = new Vector3(impulseVelocityXZ.x, impulseVelocityY, impulseVelocityXZ.y);
             hitRB.velocity = new Vector3(hitRB.velocity.x, 0f, hitRB.velocity.z);
             hitRB.AddForce(impulseVelocity, ForceMode.Impulse);
+            sfxPlayer.Punch();
         }
-
         yield return new WaitForSeconds(endLag);
 
         //End hit

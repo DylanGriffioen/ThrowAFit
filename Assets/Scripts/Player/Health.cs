@@ -13,6 +13,8 @@ public class Health : MonoBehaviour
     [SerializeField] Life lifes;
     private Vector3 _respawnSpot;
 
+    PlaySFX sfxPlayer;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -24,6 +26,7 @@ public class Health : MonoBehaviour
         currentHealth = maxHealth;
         alive = true;
         _respawnSpot = new Vector3(0f, 100f, 0f);
+        sfxPlayer = GameObject.Find("SFX").GetComponent<PlaySFX>();
     }
     public float GetHitForceMultiplier() { return hitForceMultipler; }
 
@@ -57,6 +60,7 @@ public class Health : MonoBehaviour
                 //Kill();
             }
         }
+        sfxPlayer.TakeDamage();
     }
 
     public void Kill()

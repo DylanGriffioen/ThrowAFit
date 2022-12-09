@@ -8,6 +8,7 @@ public class Movement : MonoBehaviour
     [Min(0.01f)] public float baseMoveSpeed, baseJumpHeigh, throwMoveImpulse, smoothTurnTime, crouchHeightMult, crouchWidthMult, ragdollThreshold;
     public GameObject ragdoll;
 
+    PlaySFX sfxPlayer;
     Rigidbody rb;
     Transform model;
     [System.NonSerialized] public Transform itemSlot;
@@ -39,6 +40,7 @@ public class Movement : MonoBehaviour
         render = GetComponentInChildren<SkinnedMeshRenderer>();
         coll = GetComponent<CapsuleCollider>();
         followScript = GetComponent<Follow>();
+        sfxPlayer = GameObject.Find("SFX").GetComponent<PlaySFX>();
     }
     void Start()
     {
@@ -196,6 +198,7 @@ public class Movement : MonoBehaviour
             rb.velocity = Vector3.zero;
             rb.AddForce((moving?inputDir3:transform.forward)*throwMoveImpulse, ForceMode.VelocityChange);
         }
+        sfxPlayer.Throw();
     }
     void EndThrow()
     {

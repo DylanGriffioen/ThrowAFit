@@ -4,15 +4,29 @@ using UnityEngine;
 
 public class PlaySFX : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameObject[] punches = new GameObject[3], throws = new GameObject[2], oofs = new GameObject[3];
+
+    public void Punch()
     {
-        
+        var instance = Instantiate(punches[Random.Range(0, punches.Length)],transform);
+        StartCoroutine(DestroyInstance(instance));
+    }
+    
+    public void TakeDamage()
+    {
+        var instance = Instantiate(oofs[Random.Range(0, oofs.Length)], transform);
+        StartCoroutine(DestroyInstance(instance));
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Throw()
     {
-        
+        var instance = Instantiate(throws[Random.Range(0, throws.Length)], transform);
+        StartCoroutine(DestroyInstance(instance));
+    }
+
+    IEnumerator DestroyInstance(GameObject obj)
+    {
+        yield return new WaitForSeconds(1f);
+        Destroy(obj);
     }
 }
