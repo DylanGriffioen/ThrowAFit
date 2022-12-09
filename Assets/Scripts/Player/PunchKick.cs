@@ -25,6 +25,8 @@ public class PunchKick : MonoBehaviour
 
     List<GameObject> objectsInHitbox = new List<GameObject>();
 
+    public List<GameObject> ObjectsInHitbox { get { return objectsInHitbox; } }
+
     Movement movementScript;
 
     bool animating, hitting;
@@ -127,7 +129,6 @@ public class PunchKick : MonoBehaviour
         //Apply things to each object in area
         foreach (GameObject obj in objectsInHitbox)
         {
-            
             var hitRB = obj.GetComponent<Rigidbody>();
             if (hitRB == null) { continue; }
             Vector2 impulseVelocityXZ = new Vector2(transform.forward.x,transform.forward.z) * force * _forceMultiplier;

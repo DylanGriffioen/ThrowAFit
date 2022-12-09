@@ -165,8 +165,13 @@ public class GameManager : MonoBehaviour
                     {
                         itemInteraction.DropDestroyItem();
                     }
+                    PunchKick pk = player.GetComponentInChildren<PunchKick>();
+                    if (pk != null)
+                    {
+                        pk.ObjectsInHitbox.Clear();
+                    }
 
-                    
+
                     if (spawnArea != null)
                         player.transform.position = RandomLocation.GetRandomLocationOnObject(spawnArea, distanceToEdge, dropHeight);
 
@@ -282,12 +287,6 @@ public class GameManager : MonoBehaviour
             Debug.Log($"scene: {SceneManager.GetActiveScene()}%");
             yield return null;
         }
-        /*while (asyncOperation == null || !asyncOperation.isDone)
-        {
-            float p = asyncOperation == null ? -1f : asyncOperation.progress * 100;
-            Debug.Log($"async: {p}%");
-            yield return null;
-        }*/
 
         GAME_STATE = GameStatus.COUNTDOWN;
         GameObject countDownScreen = gameCanvas.transform.GetChild(2).gameObject;

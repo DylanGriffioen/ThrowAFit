@@ -89,6 +89,14 @@ public class ItemInteraction : MonoBehaviour
                                 ii.GetObjectsInLootArea().Remove(heldObject);
                             }
                         }
+                        PunchKick pk = player.GetComponentInChildren<PunchKick>();
+                        if (pk != null)
+                        {
+                            if (pk.ObjectsInHitbox.Contains(heldObject))
+                            {
+                                pk.ObjectsInHitbox.Remove(heldObject);
+                            }
+                        }
                     }
                 }
 
