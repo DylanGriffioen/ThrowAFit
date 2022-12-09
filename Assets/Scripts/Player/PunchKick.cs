@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PunchKick : MonoBehaviour
 {
-    private bool _canPunchKick = false;
+    private bool _canPunchKick = true;
 
     PlaySFX sfxPlayer;
     Animator animator;

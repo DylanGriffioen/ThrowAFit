@@ -91,6 +91,7 @@ public class Movement : MonoBehaviour
         if (hitStunned && rb.velocity.magnitude < 0.2f && velociraptor)
         {
             hitStunned = false;
+            movementEnabled = true;
         }
     }
     void ItemSlotMove()
