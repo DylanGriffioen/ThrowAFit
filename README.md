@@ -6,7 +6,7 @@
 * Gamepads (Playstation and Xbox 360 controllers tested)
 
 
-## Controls (Keyboard / General Gamepad):
+## Controls (Keyboard / General Gamepad)
 
 * Move -> WASD / Left Stick
 
