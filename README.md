@@ -1,39 +1,26 @@
 
 
 
-## Supported player  controllers
+## Supported controllers
 * Keyboard
-* PlayStation Controller (tested with ps4 dualchock)
+* Gamepads (Playstation and Xbox 360 controllers tested)
 
 
-## Player in-game controls
+## Controls (Keyboard / General Gamepad):
 
+* Move -> WASD / Left Stick
 
-* Move 
-	* WASD [keyboard]
-	* Arrows [keyboard]
-	* D-pad [PS controller]
-	* Left Stick [PS controller]
+* Jump -> Spacebar / Button South
 
-* Jump
-	* Space [Keyboard]
-	* Cross button [PS controller]
-	
-* Crouch (in progress)
-	* C [Keyboard]
-	* Square [PS controller]
-	
-* Pickup/Drop Object (in progress) 
-	* E [Keyboard]
-	* R2 [PS controller]
-	
-* Throw Object (in progress)
-	* F [Keyboard]
-	* R1 [PS controller]
-	
-* Pause Object (in progress)
-	* Esc [Keyboard]
-	* Options [PS controller]
+* Crouch -> Left Control / Left Shoulder
+
+* Pick up / Drop object -> E / Right Shoulder
+
+* Throw object -> F / Right Trigger
+
+* Punch -> J / Button West
+
+* Kick -> K / Button East
 	
 	
 
