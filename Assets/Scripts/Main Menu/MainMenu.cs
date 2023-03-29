@@ -42,5 +42,4 @@ public class MainMenu : MonoBehaviour
         //yield return new WaitUntil(() => audioSource.isPlaying == false);
         SceneManager.LoadScene("PregameScene");
     }
-
 }
